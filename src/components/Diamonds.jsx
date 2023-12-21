@@ -7,7 +7,7 @@ const DiamondCard = ({ diamond }) => {
   return (
     <motion.div
       key={diamond.id}
-      className="lg:w-1/4 md:w-1/2 p-4 w-full
+      className="lg:w-1/4 md:w-1/2 p-6 w-full
         hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out
       "
       initial={{ opacity: 0, y: 20 }}
@@ -75,15 +75,18 @@ export default function Diamonds({ diamondsData, setLimit }) {
   return (
     <section className="text-gray-400 body-font bg-slate-100">
       <div className="container px-5 py-8 mx-auto">
-        <div className="flex flex-wrap -m-4">
-          {setLimit
-            ? limitedDiamondsData.map((diamond) => (
-                <DiamondCard key={diamond.id} diamond={diamond} />
-              ))
-            : diamondsData.map((diamond) => (
-                <DiamondCard key={diamond.id} diamond={diamond} />
-              ))}
-        </div>
+        {diamondsData !== null ? (
+          <div className="flex flex-wrap -m-4">
+            {setLimit
+              ? limitedDiamondsData.map((diamond) => (
+                  <DiamondCard key={diamond.id} diamond={diamond} />
+                ))
+              : diamondsData.map((diamond) => (
+                  <DiamondCard key={diamond.id} diamond={diamond} />
+                ))}
+          </div>
+        ) : null}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
