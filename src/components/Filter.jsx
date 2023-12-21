@@ -50,6 +50,9 @@ export const Filter = () => {
   const [selectedCuts, setSelectedCuts] = useState([]);
   const [selectedPolishes, setSelectedPolishes] = useState([]);
   const [selectedSymmetries, setSelectedSymmetries] = useState([]);
+  const [selectedFlourescence, setSelectedFlourescence] = useState([]);
+
+  const [filteredDiamonds, setFilteredDiamonds] = useState([]);
 
   const onCutSelect = (cut) => {
     setSelectedCuts((prevSelected) =>
@@ -132,19 +135,211 @@ export const Filter = () => {
         : [...prevSelected, shape]
     );
   };
-
-  const onApplyFilters = () => {
-    console.log(
-      selectedCertificates,
-      selectedDeliveryTimes,
-      selectedShapes,
-      selectedColors,
-      selectedClarity,
-      selectedCuts,
-      selectedPolishes,
-      selectedSymmetries
+  const onFluorescenceSelect = (fluorescence) => {
+    setSelectedFlourescence((prevSelected) =>
+      prevSelected.includes(fluorescence)
+        ? prevSelected.filter(
+            (selectedFlourescence) => selectedFlourescence !== fluorescence
+          )
+        : [...prevSelected, fluorescence]
     );
-    toggleSidebar();
+  };
+
+  const onApplyFilters = async () => {
+    try {
+      const response = await fetch(
+        "https://integrations.nivoda.net/graphql-loupe360",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: `
+                            {
+                                authenticate {
+                                    username_and_password(username: "${
+                                      import.meta.env.VITE_AUTH_EMAIL
+                                    }", password: "${
+              import.meta.env.VITE_AUTH_PASSWORD
+            }") {
+                                        token
+                                    }
+                                }
+                            }
+                        `,
+          }),
+        }
+      );
+
+      const authData = await response.json();
+
+      if (authData.errors) {
+        console.error("Nivoda Authentication Error:", authData.errors);
+        return;
+      }
+
+      const token = authData.data.authenticate.username_and_password.token;
+
+      const diamondsResponse = await fetch(
+        "https://integrations.nivoda.net/graphql-loupe360",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            query: `
+                            {
+                                diamonds_by_query(
+                                    query: {
+                                        labgrown: false,
+                                        shapes: ${
+                                          selectedShapes.length > 0
+                                            ? `[${selectedShapes.map(
+                                                (shape) => `"${shape}"`
+                                              )}]`
+                                            : "[]"
+                                        },
+                                        cut: ${
+                                          selectedCuts.length > 0
+                                            ? `[${selectedCuts
+                                                .map((cut) => `${cut}`)
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
+                                        sizes: [],
+                                        has_v360: true,
+                                        has_image: true,
+                                        color: ${
+                                          selectedColors.length > 0
+                                            ? `[${selectedColors
+                                                .map((cl) => `${cl}`)
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
+                                        girdle: [],
+                                        flouresence: ${
+                                          selectedFlourescence.length > 0
+                                            ? `[${selectedFlourescence
+                                                .map((fl) => `${fl}`)
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
+                                        delivery_time: ${
+                                          selectedDeliveryTimes.length > 0
+                                            ? `[${selectedDeliveryTimes
+                                                .map((time) => `${time}`)
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
+                                        certificate_lab: ${
+                                          selectedCertificates.length > 0
+                                            ? `[${selectedCertificates
+                                                .map(
+                                                  (certificate) =>
+                                                    `${certificate}`
+                                                )
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
+                                        polish: ${
+                                          selectedPolishes.length > 0
+                                            ? `[${selectedPolishes
+                                                .map((polish) => `${polish}`)
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
+                                        
+                                        symmetry: ${
+                                          selectedSymmetries.length > 0
+                                            ? `[${selectedSymmetries
+                                                .map(
+                                                  (symmetry) => `${symmetry}`
+                                                )
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
+                                        dollar_value: { from: 0, to: 10000000},
+                                        dollar_per_carat: null,
+                                    },
+                                    offset: 0,
+                                    limit: 50,
+                                    order: { type: price, direction: ASC }
+                                ) {
+                                    items {
+                                        id
+                                        video
+                                        image
+                                        availability
+                                        supplierStockId
+                                        brown
+                                        green
+                                        milky
+                                        eyeClean
+                                        blue
+                                        gray
+                                        other
+                                        eyeClean
+                                        supplier{
+                                          id
+                                          name
+                                          locations{
+                                            country
+                                            city
+                                            state
+                                          }
+                                        }
+                                        delivery_time{
+                                          express_timeline_applicable
+                                          min_business_days
+                                          max_business_days
+                                        }
+                                        mine_of_origin
+                                        certificate {
+                                          id
+                                          lab
+                                          shape
+                                          certNumber
+                                          cut
+                                          carats
+                                          clarity
+                                          polish
+                                          symmetry
+                                          color
+                                          width
+                                          length
+                                          depth
+                                          girdle
+                                          floInt
+                                          floCol
+                                          depthPercentage
+                                          table
+                                         }
+                                    price
+                                    }
+                                    total_count
+                                }
+                            }
+                        `,
+          }),
+        }
+      );
+
+      const diamondsData = await diamondsResponse.json();
+
+      if (diamondsData.error) {
+        console.error("Nivoda Diamonds Query Error:", diamondsData.error);
+      } else {
+        // Set diamondsData in state or perform other actions as needed
+        console.log(diamondsData);
+        setFilteredDiamonds(diamondsData.data.diamonds_by_query.items);
+      }
+    } catch (error) {
+      console.error("Error fetching Nivoda data:", error);
+    }
+    console.log(selectedShapes);
   };
 
   const onClearFilters = () => {
@@ -156,7 +351,7 @@ export const Filter = () => {
     setSelectedCuts([]);
     setSelectedPolishes([]);
     setSelectedSymmetries([]);
-
+    setSelectedFlourescence([]);
     toggleSidebar();
   };
 
@@ -217,6 +412,8 @@ export const Filter = () => {
             onSymmetrySelect={onSymmetrySelect}
             onApplyFilters={onApplyFilters}
             onClearFilters={onClearFilters}
+            selectedFlourescence={selectedFlourescence}
+            onFluorescenceSelect={onFluorescenceSelect}
           />
         </div>
       </div>
@@ -245,6 +442,8 @@ const SideBar = ({
   onSymmetrySelect,
   onApplyFilters,
   onClearFilters,
+  onFluorescenceSelect,
+  selectedFlourescence,
 }) => {
   return (
     <div
@@ -287,9 +486,9 @@ const SideBar = ({
             {certificateLabData.map((option) => (
               <button
                 key={option.id}
-                onClick={() => onCertificateSelect(option.id)}
+                onClick={() => onCertificateSelect(option.name)}
                 className={`${
-                  selectedCertificates.includes(option.id)
+                  selectedCertificates.includes(option.name)
                     ? "border-pink-500 text-pink-500"
                     : "text-black bg-white border-gray-300"
                 } px-4 py-2 m-1 rounded-md border focus:outline-none`}
@@ -306,9 +505,9 @@ const SideBar = ({
               {shapeData.map((shape) => (
                 <button
                   key={shape.id}
-                  onClick={() => onShapeSelect(shape.id)}
+                  onClick={() => onShapeSelect(shape.name)}
                   className={`${
-                    selectedShapes.includes(shape.id)
+                    selectedShapes.includes(shape.name)
                       ? "border-pink-500 text-pink-500"
                       : "text-black bg-white border-gray-300"
                   } px-4 py-2 rounded-md border focus:outline-none flex flex-col items-center justify-center`}
@@ -326,9 +525,9 @@ const SideBar = ({
             {colorData.map((option) => (
               <button
                 key={option.id}
-                onClick={() => onColorSelect(option.id)}
+                onClick={() => onColorSelect(option.color)}
                 className={`${
-                  selectedColors.includes(option.id)
+                  selectedColors.includes(option.color)
                     ? "border-pink-500 text-pink-500"
                     : "text-black bg-white border-gray-300"
                 } px-4 py-2 rounded-md border focus:outline-none`}
@@ -419,9 +618,9 @@ const SideBar = ({
               {fluorescenceData.map((option) => (
                 <button
                   key={option.id}
-                  onClick={() => onCutSelect(option.id)}
+                  onClick={() => onFluorescenceSelect(option.id)}
                   className={`${
-                    selectedCuts.includes(option.id)
+                    selectedFlourescence.includes(option.id)
                       ? "border-pink-500 text-pink-500"
                       : "text-black bg-white border-gray-300"
                   } px-4 py-1 rounded-md border focus:outline-none text-center`}

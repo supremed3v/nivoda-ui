@@ -8,7 +8,7 @@ export const Explore = () => {
   return (
     <section>
       <Filter />
-      <Diamonds diamondsData={diamondsData} />
+      <Diamonds diamondsData={diamondsData} setLimit={false} />
     </section>
   );
 };

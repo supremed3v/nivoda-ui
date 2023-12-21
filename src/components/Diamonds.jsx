@@ -99,16 +99,19 @@ export default function Diamonds({ diamondsData, setLimit }) {
             marginTop: "2rem",
           }}
         >
-          {(setLimit && diamondsData !== null) || undefined ? (
+          {setLimit === undefined ||
+          (false &&
+            window.location.href !== "/explore" &&
+            diamondsData !== null) ? (
             <Link
-              to="/diamonds"
+              to="/explore"
               className="text-white bg-gray-900 border-0 py-3 px-3 text-lg focus:outline-none hover:bg-gray-700 rounded-lg md:mt-0 p-5 text-center"
             >
               View All Diamonds
             </Link>
-          ) : (
+          ) : diamondsData === null ? (
             <CardsSkeleton />
-          )}
+          ) : null}
         </motion.div>
       </div>
     </section>
