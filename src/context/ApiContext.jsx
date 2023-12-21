@@ -21,11 +21,11 @@ export const NivodaDiamondsProvider = ({ children }) => {
               query: `
                             {
                                 authenticate {
-                                    username_and_password(username: ${
+                                    username_and_password(username: "${
                                       import.meta.env.VITE_AUTH_EMAIL
-                                    }, password: ${
+                                    }", password: "${
                 import.meta.env.VITE_AUTH_PASSWORD
-              }) {
+              }") {
                                         token
                                     }
                                 }
