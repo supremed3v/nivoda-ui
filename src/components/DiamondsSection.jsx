@@ -5,7 +5,7 @@ import Diamonds from "./Diamonds";
 import { CardsSkeleton } from "./libs/skeleton";
 
 export const DiamondsSection = () => {
-  const diamondsData = useNivodaDiamonds();
+  const { diamondsData } = useNivodaDiamonds();
   return (
     <Suspense fallback={<CardsSkeleton />}>
       <Diamonds diamondsData={diamondsData} setLimit={true} />

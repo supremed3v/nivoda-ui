@@ -10,8 +10,13 @@ import {
   shapeData,
   symmetryData,
 } from "./libs/data";
+import { useNivodaDiamonds } from "../context/ApiContext";
 
-const SortSubmenu = () => {
+const SortSubmenu = ({ onSortSelected }) => {
+  const handleSortClick = (order) => {
+    onSortSelected(order);
+  };
+
   return (
     <div className="origin-top-right absolute z-20 right-0 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-100">
       <div
@@ -24,6 +29,7 @@ const SortSubmenu = () => {
           href="#"
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           role="menuitem"
+          onClick={() => handleSortClick("ASC")}
         >
           Price: Low to High
         </a>
@@ -31,6 +37,7 @@ const SortSubmenu = () => {
           href="#"
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
           role="menuitem"
+          onClick={() => handleSortClick("DESC")}
         >
           Price: High to Low
         </a>
@@ -40,7 +47,9 @@ const SortSubmenu = () => {
 };
 
 export const Filter = () => {
-  const [isSortHovered, setIsSortHovered] = useState(false);
+  const { setFilteredDiamonds, setClearFilter } = useNivodaDiamonds();
+  const [loading, setLoading] = useState(false);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedDeliveryTimes, setSelectedDeliveryTimes] = useState([]);
   const [selectedCertificates, setSelectedCertificates] = useState([]);
@@ -51,8 +60,13 @@ export const Filter = () => {
   const [selectedPolishes, setSelectedPolishes] = useState([]);
   const [selectedSymmetries, setSelectedSymmetries] = useState([]);
   const [selectedFlourescence, setSelectedFlourescence] = useState([]);
+  const [anyFilterApplied, setAnyFilterApplied] = useState(false);
 
-  const [filteredDiamonds, setFilteredDiamonds] = useState([]);
+  const [sortOrder, setSortOrder] = useState(null);
+
+  const handleSortSelected = (order) => {
+    setSortOrder(order);
+  };
 
   const onCutSelect = (cut) => {
     setSelectedCuts((prevSelected) =>
@@ -102,14 +116,6 @@ export const Filter = () => {
     document.body.style.overflow = isSidebarOpen ? "auto" : "hidden";
   };
 
-  const handleSortHover = () => {
-    setIsSortHovered(true);
-  };
-
-  const handleSortLeave = () => {
-    setIsSortHovered(false);
-  };
-
   const handleDeliveryTimeSelection = (time) => {
     setSelectedDeliveryTimes((prevSelected) =>
       prevSelected.includes(time)
@@ -145,8 +151,9 @@ export const Filter = () => {
     );
   };
 
-  const onApplyFilters = async () => {
+  const handleFiltersApplied = async () => {
     try {
+      setLoading(true);
       const response = await fetch(
         "https://integrations.nivoda.net/graphql-loupe360",
         {
@@ -266,7 +273,7 @@ export const Filter = () => {
                                     },
                                     offset: 0,
                                     limit: 50,
-                                    order: { type: price, direction: ASC }
+                                    order: { type: price, direction: DESC }
                                 ) {
                                     items {
                                         id
@@ -331,16 +338,19 @@ export const Filter = () => {
 
       if (diamondsData.error) {
         console.error("Nivoda Diamonds Query Error:", diamondsData.error);
+        setLoading(false);
       } else {
-        // Set diamondsData in state or perform other actions as needed
-        console.log(diamondsData);
         setFilteredDiamonds(diamondsData.data.diamonds_by_query.items);
+        setLoading(false);
+        toggleSidebar();
       }
     } catch (error) {
       console.error("Error fetching Nivoda data:", error);
+      setLoading(false);
     }
-    console.log(selectedShapes);
   };
+
+  const [showSort, setShowSort] = useState(false);
 
   const onClearFilters = () => {
     setSelectedCertificates([]);
@@ -352,7 +362,13 @@ export const Filter = () => {
     setSelectedPolishes([]);
     setSelectedSymmetries([]);
     setSelectedFlourescence([]);
+    setAnyFilterApplied(false);
     toggleSidebar();
+    setClearFilter(true);
+  };
+
+  const toggleSort = () => {
+    setShowSort(!showSort);
   };
 
   return (
@@ -361,13 +377,16 @@ export const Filter = () => {
         <div className="group relative inline-flex text-left justify-between w-full items-start">
           <button
             type="button"
-            className="group w-24 px-4 py-3 rounded-md text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+            className="group w-24 relative px-4 py-3 rounded-md text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
             style={{
               backgroundColor: "rgb(45, 60, 92)",
             }}
             onClick={toggleSidebar}
           >
             All filters
+            {anyFilterApplied && (
+              <span className="absolute top-0 right-0 w-3 h-3 bg-pink-500 rounded-full"></span>
+            )}
           </button>
 
           <button
@@ -376,13 +395,14 @@ export const Filter = () => {
             style={{
               backgroundColor: "rgb(45, 60, 92)",
             }}
-            onMouseEnter={handleSortHover}
-            onMouseLeave={handleSortLeave}
+            onClick={() => toggleSort()}
           >
             Sort
           </button>
 
-          {isSortHovered && <SortSubmenu />}
+          {showSort === true && (
+            <SortSubmenu onSortSelected={handleSortSelected} />
+          )}
 
           {isSidebarOpen && (
             <div
@@ -410,10 +430,11 @@ export const Filter = () => {
             onPolishSelect={onPolishSelect}
             selectedSymmetries={selectedSymmetries}
             onSymmetrySelect={onSymmetrySelect}
-            onApplyFilters={onApplyFilters}
+            handleFiltersApplied={handleFiltersApplied}
             onClearFilters={onClearFilters}
             selectedFlourescence={selectedFlourescence}
             onFluorescenceSelect={onFluorescenceSelect}
+            loading={loading}
           />
         </div>
       </div>
@@ -440,10 +461,11 @@ const SideBar = ({
   onPolishSelect,
   selectedSymmetries,
   onSymmetrySelect,
-  onApplyFilters,
+  handleFiltersApplied,
   onClearFilters,
   onFluorescenceSelect,
   selectedFlourescence,
+  loading,
 }) => {
   return (
     <div
@@ -647,10 +669,11 @@ const SideBar = ({
           Cancel
         </button>
         <button
-          onClick={onApplyFilters}
+          onClick={handleFiltersApplied}
           className="bg-gray-900 w-full p-2 h-full rounded focus:outline-none"
+          disabled={loading}
         >
-          Apply Filters
+          {loading ? "Fetching Diamonds..." : "Apply Filters"}
         </button>
       </div>
     </div>

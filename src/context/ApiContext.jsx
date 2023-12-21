@@ -6,6 +6,8 @@ const NivodaDiamondsContext = createContext();
 
 export const NivodaDiamondsProvider = ({ children }) => {
   const [diamondsData, setDiamondsData] = useState(null);
+  const [filteredDiamonds, setFilteredDiamonds] = useState([]);
+  const [clearFilter, setClearFilter] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,12 +70,12 @@ export const NivodaDiamondsProvider = ({ children }) => {
                                         certificate_lab: [],
                                         polish: [],
                                         symmetry: [],
-                                        dollar_value: { from: 700, to: 10000000},
+                                        dollar_value: { from: 0, to: 10000000},
                                         dollar_per_carat: null,
                                     },
                                     offset: 0,
                                     limit: 50,
-                                    order: { type: price, direction: ASC }
+                                    order: { type: price, direction: DESC }
                                 ) {
                                     items {
                                         id
@@ -151,7 +153,15 @@ export const NivodaDiamondsProvider = ({ children }) => {
   }, []);
 
   return (
-    <NivodaDiamondsContext.Provider value={diamondsData}>
+    <NivodaDiamondsContext.Provider
+      value={{
+        diamondsData,
+        filteredDiamonds,
+        setFilteredDiamonds,
+        clearFilter,
+        setClearFilter,
+      }}
+    >
       {children}
     </NivodaDiamondsContext.Provider>
   );
