@@ -144,7 +144,20 @@ export const Filter = () => {
       selectedPolishes,
       selectedSymmetries
     );
-    setIsSidebarOpen(false);
+    toggleSidebar();
+  };
+
+  const onClearFilters = () => {
+    setSelectedCertificates([]);
+    setSelectedDeliveryTimes([]);
+    setSelectedShapes([]);
+    setSelectedColors([]);
+    setSelectedClarity([]);
+    setSelectedCuts([]);
+    setSelectedPolishes([]);
+    setSelectedSymmetries([]);
+
+    toggleSidebar();
   };
 
   return (
@@ -203,6 +216,7 @@ export const Filter = () => {
             selectedSymmetries={selectedSymmetries}
             onSymmetrySelect={onSymmetrySelect}
             onApplyFilters={onApplyFilters}
+            onClearFilters={onClearFilters}
           />
         </div>
       </div>
@@ -230,6 +244,7 @@ const SideBar = ({
   selectedSymmetries,
   onSymmetrySelect,
   onApplyFilters,
+  onClearFilters,
 }) => {
   return (
     <div
@@ -420,8 +435,16 @@ const SideBar = ({
       </div>
 
       <div className=" sticky bottom-0 left-0 right-0 border-t-2 pt-3 bg-gray-50 text-white flex justify-evenly items-center py-2">
-        <button className="w-20 mr-4 h-full text-black">Clear</button>
-        <button onClick={onClose} className="w-20 mr-4 h-full text-black">
+        <button
+          onClick={onClearFilters}
+          className="w-20 mr-4 h-full text-black"
+        >
+          Clear
+        </button>
+        <button
+          onClick={onClearFilters}
+          className="w-20 mr-4 h-full text-black"
+        >
           Cancel
         </button>
         <button
