@@ -75,7 +75,7 @@ export default function Diamonds({ diamondsData, setLimit }) {
   return (
     <section className="text-gray-400 body-font bg-slate-100">
       <div className="container px-5 py-8 mx-auto">
-        {diamondsData !== null ? (
+        {diamondsData !== null && diamondsData.length !== 0 ? (
           <div className="flex flex-wrap -m-4">
             {setLimit
               ? limitedDiamondsData.map((diamond) => (
@@ -84,6 +84,16 @@ export default function Diamonds({ diamondsData, setLimit }) {
               : diamondsData.map((diamond) => (
                   <DiamondCard key={diamond.id} diamond={diamond} />
                 ))}
+          </div>
+        ) : null}
+
+        {diamondsData !== null && diamondsData.length === 0 ? (
+          <div className="flex flex-wrap -m-4">
+            <div className="lg:w-1/4 md:w-1/2 p-6 w-full">
+              <h2 className="text-gray-700 title-font text-lg font-medium">
+                No Diamonds Found
+              </h2>
+            </div>
           </div>
         ) : null}
 

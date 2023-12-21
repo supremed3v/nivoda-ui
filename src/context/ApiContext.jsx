@@ -6,7 +6,7 @@ const NivodaDiamondsContext = createContext();
 
 export const NivodaDiamondsProvider = ({ children }) => {
   const [diamondsData, setDiamondsData] = useState(null);
-  const [filteredDiamonds, setFilteredDiamonds] = useState([]);
+  const [filteredDiamonds, setFilteredDiamonds] = useState(null);
   const [clearFilter, setClearFilter] = useState(false);
 
   useEffect(() => {

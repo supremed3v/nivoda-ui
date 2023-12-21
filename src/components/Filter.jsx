@@ -342,6 +342,7 @@ export const Filter = () => {
       } else {
         setFilteredDiamonds(diamondsData.data.diamonds_by_query.items);
         setLoading(false);
+        setAnyFilterApplied(true);
         toggleSidebar();
       }
     } catch (error) {

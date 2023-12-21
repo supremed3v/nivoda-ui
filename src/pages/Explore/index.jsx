@@ -9,7 +9,7 @@ export const Explore = () => {
   const [diamondProp, setDiamondProp] = useState([]);
 
   useEffect(() => {
-    if (filteredDiamonds.length === 0 && clearFilter === true) {
+    if (filteredDiamonds === null || clearFilter === true) {
       setDiamondProp(diamondsData);
     } else {
       setDiamondProp(filteredDiamonds);
