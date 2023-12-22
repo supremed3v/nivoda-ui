@@ -69,6 +69,8 @@ export const Filter = () => {
   const [selectedFlourescence, setSelectedFlourescence] = useState([]);
   const [anyFilterApplied, setAnyFilterApplied] = useState(false);
   const [isNaturalSelected, setIsNaturalSelected] = useState(true);
+  const [dollarFrom, setDollarFrom] = useState(0);
+  const [dollarTo, setDollarTo] = useState(10000000);
 
   const onCutSelect = (cut) => {
     setSelectedCuts((prevSelected) =>
@@ -270,7 +272,7 @@ export const Filter = () => {
                                                 .join(", ")}]`
                                             : "[]"
                                         },
-                                        dollar_value: { from: 0, to: 10000000},
+                                        dollar_value: { from: ${dollarFrom}, to: ${dollarTo}},
                                         dollar_per_carat: null,
                                     },
                                     offset: 0,
@@ -464,6 +466,10 @@ export const Filter = () => {
             selectedFlourescence={selectedFlourescence}
             onFluorescenceSelect={onFluorescenceSelect}
             loading={loading}
+            dollarFrom={dollarFrom}
+            setDollarFrom={setDollarFrom}
+            dollarTo={dollarTo}
+            setDollarTo={setDollarTo}
           />
         </div>
       </div>
@@ -495,7 +501,13 @@ const SideBar = ({
   onFluorescenceSelect,
   selectedFlourescence,
   loading,
+  dollarFrom,
+  setDollarFrom,
+  dollarTo,
+  setDollarTo,
 }) => {
+  console.log(dollarTo);
+  console.log(dollarFrom);
   return (
     <div
       className={`fixed top-0 left-0 w-[720px] h-full bg-white shadow-lg transform ${
@@ -663,6 +675,7 @@ const SideBar = ({
             ))}
           </div>
 
+          {/* Fluorescence */}
           <div className="col-span-2 mt-4 mb-4">
             <h2 className="text-lg font-bold mb-2">Fluorescence</h2>
             <div className="grid grid-cols-6 gap-4">
@@ -679,6 +692,42 @@ const SideBar = ({
                   {option.fluorescence}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Price */}
+
+          <div className="col-span-2 mt-4 mb-4">
+            <h2 className="text-lg font-bold mb-2">Price</h2>
+            <div className="grid grid-cols-8 gap-1">
+              <div className="col-span-1">
+                <button className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none">
+                  <span className="text-pink-500 text-center">Price</span>
+                </button>
+              </div>
+              <div className="col-span-3">
+                <label htmlFor="">
+                  <span className="text-gray-600 text-center">Min</span>
+                </label>
+
+                <input
+                  type="number"
+                  placeholder="Min: (eg: 0)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                  onChange={(e) => setDollarFrom(e.target.value)}
+                />
+              </div>
+              <div className="col-span-3">
+                <label htmlFor="">
+                  <span className="text-gray-600">Max</span>
+                </label>
+                <input
+                  type="number"
+                  placeholder="Max: (eg: 100000)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                  onChange={(e) => setDollarTo(e.target.value)}
+                />
+              </div>
             </div>
           </div>
         </div>

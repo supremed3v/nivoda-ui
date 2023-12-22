@@ -114,9 +114,10 @@ export const SingleDiamond = () => {
                           depthPercentage
                           table
                           crownHeight
-                            crownAngle
-                            pavDepth
-                            pavAngle
+                          pdfUrl
+                          crownAngle
+                          pavDepth
+                          pavAngle
                          }
                          mine_of_origin
                       price
@@ -156,7 +157,7 @@ export const SingleDiamond = () => {
   return (
     data && (
       <motion.section
-        className="text-gray-600 body-font overflow-hidden"
+        className="text-gray-600 body-font overflow-hidden py-10"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -189,29 +190,40 @@ export const SingleDiamond = () => {
               <div className="flex py-2">
                 <div className="flex align-middle items-center w-full">
                   <h3 className=" text-pretty font-bold text-gray-600 text-lg mb-1 w-full">
-                    Total Price ex VAT
+                    Total Price
                   </h3>
                   <span className="ml-auto text-pretty font-bold text-gray-600 text-xl ">
                     ${data?.price / 100}
                   </span>
                 </div>
 
-                <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+                {/* <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
                   <svg
                     fill="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     className="w-5 h-5"
                     viewBox="0 0 24 24"
                   >
                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                   </svg>
-                </button>
+                </button> */}
               </div>
+              {data?.certificate?.pdfUrl && (
+                <a
+                  href={data.certificate.pdfUrl}
+                  className="text-white bg-gray-700 border-0 py-2 mb-2 px-6 focus:outline-none hover:bg-gray-600 rounded"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  PDF Certificate Download
+                </a>
+              )}
               <button className="flex ml-auto text-white bg-gray-700 border-0 py-2 mb-2 px-6 focus:outline-none hover:bg-gray-600 rounded">
                 Add to cart
               </button>
+
               <div className="leading-relaxed">
                 {/* Diamond Details */}
                 <Accordion
