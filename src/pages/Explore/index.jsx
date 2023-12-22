@@ -30,39 +30,37 @@ export const Explore = () => {
   };
 
   return (
-    <section>
-      <FadeInWhenVisible>
-        <div className="ml-2 container mt-40 flex items-center justify-center w-[100%]">
-          <button
-            className={`${
-              !labGrown && !loading
-                ? "border-pink-500 text-pink-500"
-                : "text-black bg-white border-gray-300"
-            } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-            onClick={() => changeLabGrown(false)}
-          >
-            Natural
-          </button>
-          <button
-            className={`${
-              labGrown && !loading
-                ? "border-pink-500 text-pink-500"
-                : "text-black bg-white border-gray-300"
-            } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-            onClick={() => changeLabGrown(true)}
-          >
-            Lab Grown
-          </button>
-        </div>
-        {loading ? (
-          <CardsSkeleton />
-        ) : (
-          <>
-            <Filter />
-            <Diamonds diamondsData={diamondProp} setLimit={false} />
-          </>
-        )}
-      </FadeInWhenVisible>
+    <section className="mt-40 ">
+      <div className="flex items-center justify-center w-[100%]">
+        <button
+          className={`${
+            !labGrown && !loading
+              ? "border-pink-500 border-2 border-spacing-6 text-pink-500"
+              : "text-black bg-white border-gray-300"
+          } px-4 py-2 m-1 rounded-md border-2 focus:outline-none`}
+          onClick={() => changeLabGrown(false)}
+        >
+          Natural
+        </button>
+        <button
+          className={`${
+            labGrown && !loading
+              ? "border-pink-500 border-2 border-spacing-6 text-pink-500"
+              : "text-black bg-white border-gray-300"
+          } px-4 py-2 m-1 rounded-md border-2 focus:outline-none`}
+          onClick={() => changeLabGrown(true)}
+        >
+          Lab Grown
+        </button>
+      </div>
+      {loading ? (
+        <CardsSkeleton />
+      ) : (
+        <>
+          <Filter />
+          <Diamonds diamondsData={diamondProp} setLimit={false} />
+        </>
+      )}
     </section>
   );
 };

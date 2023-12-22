@@ -10,6 +10,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
   const [clearFilter, setClearFilter] = useState(false);
   const [labGrown, setLabGrown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState("ASC");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,7 +80,9 @@ export const NivodaDiamondsProvider = ({ children }) => {
                                     },
                                     offset: 0,
                                     limit: 50,
-                                    order: { type: price, direction: DESC }
+                                    order: { type: price, direction: ${
+                                      sortOrder === "ASC" ? "ASC" : "DESC"
+                                    } }
                                 ) {
                                     items {
                                         id
@@ -157,7 +160,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
     };
 
     fetchData();
-  }, [labGrown]);
+  }, [labGrown, sortOrder]);
 
   return (
     <NivodaDiamondsContext.Provider
@@ -170,6 +173,8 @@ export const NivodaDiamondsProvider = ({ children }) => {
         labGrown,
         setLabGrown,
         loading,
+        sortOrder,
+        setSortOrder,
       }}
     >
       {children}

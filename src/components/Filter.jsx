@@ -47,8 +47,14 @@ const SortSubmenu = ({ onSortSelected }) => {
 };
 
 export const Filter = () => {
-  const { setFilteredDiamonds, setClearFilter, labGrown, setLabGrown } =
-    useNivodaDiamonds();
+  const {
+    setFilteredDiamonds,
+    setClearFilter,
+    labGrown,
+    setLabGrown,
+    sortOrder,
+    setSortOrder,
+  } = useNivodaDiamonds();
   const [loading, setLoading] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -63,12 +69,6 @@ export const Filter = () => {
   const [selectedFlourescence, setSelectedFlourescence] = useState([]);
   const [anyFilterApplied, setAnyFilterApplied] = useState(false);
   const [isNaturalSelected, setIsNaturalSelected] = useState(true);
-
-  const [sortOrder, setSortOrder] = useState(null);
-
-  const handleSortSelected = (order) => {
-    setSortOrder(order);
-  };
 
   const onCutSelect = (cut) => {
     setSelectedCuts((prevSelected) =>
@@ -275,7 +275,9 @@ export const Filter = () => {
                                     },
                                     offset: 0,
                                     limit: 50,
-                                    order: { type: price, direction: DESC }
+                                    order: { type: price, direction: ${
+                                      sortOrder === "ASC" ? "ASC" : "DESC"
+                                    } }
                                 ) {
                                     items {
                                         id
@@ -401,11 +403,34 @@ export const Filter = () => {
             }}
             onClick={() => toggleSort()}
           >
-            Sort
+            Sort :{" "}
+            {sortOrder === "ASC" ? "Price: Low to High" : "Price: High to Low"}
           </button>
 
           {showSort === true && (
-            <SortSubmenu onSortSelected={handleSortSelected} />
+            <div className="origin-top-right absolute z-20 right-0 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-100">
+              <div
+                className="py-1"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="menu-button"
+              >
+                <button
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  role="menuitem"
+                  onClick={() => setSortOrder("ASC")}
+                >
+                  Price: Low to High
+                </button>
+                <button
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                  role="menuitem"
+                  onClick={() => setSortOrder("DESC")}
+                >
+                  Price: High to Low
+                </button>
+              </div>
+            </div>
           )}
 
           {isSidebarOpen && (
