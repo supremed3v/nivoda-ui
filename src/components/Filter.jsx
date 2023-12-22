@@ -71,6 +71,8 @@ export const Filter = () => {
   const [isNaturalSelected, setIsNaturalSelected] = useState(true);
   const [dollarFrom, setDollarFrom] = useState(0);
   const [dollarTo, setDollarTo] = useState(10000000);
+  const [diamondSizeFrom, setDiamondSizeFrom] = useState(0);
+  const [diamondSizeTo, setDiamondSizeTo] = useState(1.5);
 
   const onCutSelect = (cut) => {
     setSelectedCuts((prevSelected) =>
@@ -220,7 +222,7 @@ export const Filter = () => {
                                                 .join(", ")}]`
                                             : "[]"
                                         },
-                                        sizes: [],
+                                        sizes: [{ from: ${diamondSizeFrom}, to: ${diamondSizeTo}}],
                                         has_v360: true,
                                         has_image: true,
                                         color: ${
@@ -470,6 +472,8 @@ export const Filter = () => {
             setDollarFrom={setDollarFrom}
             dollarTo={dollarTo}
             setDollarTo={setDollarTo}
+            setDiamondSizeFrom={setDiamondSizeFrom}
+            setDiamondSizeTo={setDiamondSizeTo}
           />
         </div>
       </div>
@@ -505,6 +509,8 @@ const SideBar = ({
   setDollarFrom,
   dollarTo,
   setDollarTo,
+  setDiamondSizeFrom,
+  setDiamondSizeTo,
 }) => {
   console.log(dollarTo);
   console.log(dollarFrom);
@@ -726,6 +732,38 @@ const SideBar = ({
                   placeholder="Max: (eg: 100000)"
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
                   onChange={(e) => setDollarTo(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Diamond Size */}
+          <div className="col-span-2 mt-4 mb-4">
+            <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
+            <div className="grid grid-cols-8 gap-1">
+              <div className="col-span-3">
+                <label htmlFor="">
+                  <span className="text-gray-600 text-center">Min</span>
+                </label>
+
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="0 ct  use . for decimals (eg: 0.5)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                  onChange={(e) => setDiamondSizeFrom(e.target.value)}
+                />
+              </div>
+              <div className="col-span-3">
+                <label htmlFor="">
+                  <span className="text-gray-600">Max</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="0 ct  use . for decimals (eg: 0.5)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                  onChange={(e) => setDiamondSizeTo(e.target.value)}
                 />
               </div>
             </div>

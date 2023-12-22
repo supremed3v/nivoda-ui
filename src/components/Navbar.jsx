@@ -20,7 +20,7 @@ export const Navbar = () => {
   return (
     <header
       className={`${
-        isScrolled ? "bg-black" : "bg-white"
+        isScrolled ? "bg-black" : "bg-transparent"
       } fixed top-0 left-0 right-0 z-10 transition duration-300 ease-in-out`}
     >
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
@@ -53,7 +53,9 @@ export const Navbar = () => {
           <Link
             to="/"
             className={`${
-              isScrolled ? "text-white" : "text-black hover:text-gray-200"
+              isScrolled
+                ? "text-white hover:text-gray-300"
+                : "text-black hover:border-gray-500 border-transparent border-b-2"
             } mr-5 py-4 title-font font-medium`}
           >
             Home
@@ -61,7 +63,9 @@ export const Navbar = () => {
           <Link
             to="/explore"
             className={`${
-              isScrolled ? "text-white" : "text-black hover:text-gray-200"
+              isScrolled
+                ? "text-white hover:text-gray-300"
+                : "text-black hover:border-gray-500 border-transparent border-b-2"
             } mr-5 py-4 title-font font-medium`}
           >
             Explore
@@ -69,7 +73,9 @@ export const Navbar = () => {
           <Link
             to="/"
             className={`${
-              isScrolled ? "text-white" : "text-black hover:text-gray-200"
+              isScrolled
+                ? "text-white hover:text-gray-300"
+                : "text-black hover:border-gray-500 border-transparent border-b-2"
             } mr-5 py-4 title-font font-medium`}
           >
             Cart
@@ -77,7 +83,9 @@ export const Navbar = () => {
           <Link
             to="/"
             className={`${
-              isScrolled ? "text-white" : "text-black hover:text-gray-200"
+              isScrolled
+                ? "text-white hover:text-gray-300"
+                : "text-black hover:border-gray-500 border-transparent border-b-2"
             } mr-5 py-4 title-font font-medium`}
           >
             Fourth Link
