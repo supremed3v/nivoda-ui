@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   certificateLabData,
   clarityData,
@@ -47,7 +47,8 @@ const SortSubmenu = ({ onSortSelected }) => {
 };
 
 export const Filter = () => {
-  const { setFilteredDiamonds, setClearFilter } = useNivodaDiamonds();
+  const { setFilteredDiamonds, setClearFilter, labGrown, setLabGrown } =
+    useNivodaDiamonds();
   const [loading, setLoading] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -61,6 +62,7 @@ export const Filter = () => {
   const [selectedSymmetries, setSelectedSymmetries] = useState([]);
   const [selectedFlourescence, setSelectedFlourescence] = useState([]);
   const [anyFilterApplied, setAnyFilterApplied] = useState(false);
+  const [isNaturalSelected, setIsNaturalSelected] = useState(true);
 
   const [sortOrder, setSortOrder] = useState(null);
 
@@ -201,7 +203,7 @@ export const Filter = () => {
                             {
                                 diamonds_by_query(
                                     query: {
-                                        labgrown: false,
+                                        labgrown: ${labGrown},
                                         shapes: ${
                                           selectedShapes.length > 0
                                             ? `[${selectedShapes.map(
@@ -365,6 +367,7 @@ export const Filter = () => {
     setSelectedFlourescence([]);
     setAnyFilterApplied(false);
     toggleSidebar();
+    setLabGrown(false);
     setClearFilter(true);
   };
 
@@ -373,7 +376,7 @@ export const Filter = () => {
   };
 
   return (
-    <section className="text-gray-400 body-font bg-slate-100">
+    <section className="text-gray-400 body-font  bg-slate-100">
       <div className="container px-5 py-2 mx-auto">
         <div className="group relative inline-flex text-left justify-between w-full items-start">
           <button

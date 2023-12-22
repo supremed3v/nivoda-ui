@@ -4,6 +4,7 @@ import { Navbar } from "../components/Navbar";
 import { Home } from "./Home";
 import { SingleDiamond } from "./SingleDiamond";
 import { Explore } from "./Explore";
+import { Footer } from "../components/Footer";
 
 export const Pages = () => {
   return (
@@ -14,6 +15,7 @@ export const Pages = () => {
         <Route path="/diamond/:id" element={<SingleDiamond />} />
         <Route path="/explore" element={<Explore />} />
       </Routes>
+      <Footer />
     </>
   );
 };
