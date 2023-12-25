@@ -15,9 +15,7 @@ export async function handler(event, context, callback) {
           query: `
             {
               authenticate {
-                username_and_password(username: "${
-                  import.meta.env.VITE_AUTH_EMAIL
-                }", password: "${import.meta.env.VITE_AUTH_PASSWORD}") {
+                username_and_password(username: "${process.env.VITE_AUTH_EMAIL}", password: "${process.env.VITE_AUTH_PASSWORD}") {
                   token
                 }
               }
