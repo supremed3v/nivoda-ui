@@ -1,8 +1,6 @@
-// authFunction.mjs
-
 import fetch from "node-fetch";
 
-export default async function handler(event) {
+export async function handler(event, context, callback) {
   try {
     const { email, password } = JSON.parse(event.body);
 
@@ -31,23 +29,23 @@ export default async function handler(event) {
 
     if (authData.errors) {
       console.error("Nivoda Authentication Error:", authData.errors);
-      return {
+      return callback(null, {
         statusCode: 401,
         body: JSON.stringify({ error: "Authentication failed" }),
-      };
+      });
     }
 
     const token = authData.data.authenticate.username_and_password.token;
 
-    return {
+    return callback(null, {
       statusCode: 200,
       body: JSON.stringify({ token }),
-    };
+    });
   } catch (error) {
     console.error("Unexpected error:", error);
-    return {
+    return callback(null, {
       statusCode: 500,
       body: JSON.stringify({ error: "Internal server error" }),
-    };
+    });
   }
 }
