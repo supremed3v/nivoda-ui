@@ -19,7 +19,8 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["**/*.js", "**/*.mjs"],
+      // For files with .js or .mjs extension
+      files: ["*.js", "*.mjs"],
       parserOptions: { sourceType: "module" },
     },
   ],
