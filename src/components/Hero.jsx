@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Hero = () => {
   return (
     <section className="text-gray-400 body-font flex items-center">
-      <div className="container mx-auto flex px-5 py-10 md:flex-row flex-col items-center h-full">
+      <div className="container mx-auto flex px-5 py-[120px] md:flex-row flex-col items-center h-full">
         <motion.div
           initial={{ x: -200 }}
           animate={{ x: 0 }}

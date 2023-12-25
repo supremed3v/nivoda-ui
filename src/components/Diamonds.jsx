@@ -54,7 +54,7 @@ const DiamondCard = ({ diamond }) => {
             Total Price
           </h3>
           <span className="ml-auto text-pretty font-bold text-gray-600 text-xl ">
-            ${diamond.price / 100}
+            ${(diamond.price / 100).toLocaleString("en-US")}
           </span>
         </div>
 
