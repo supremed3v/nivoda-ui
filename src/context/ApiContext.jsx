@@ -38,7 +38,8 @@ export const NivodaDiamondsProvider = ({ children }) => {
           return;
         }
 
-        const token = authData.data.token;
+        const token = authData.token;
+        console.log(token);
 
         const diamondsResponse = await fetch(
           "https://integrations.nivoda.net/graphql-loupe360",
