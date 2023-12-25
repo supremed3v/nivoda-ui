@@ -15,38 +15,18 @@ export const NivodaDiamondsProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      axios
-        .post("https://nivoda-staging-ui.netlify.app/.netlify/functions/auth")
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
       try {
         setLoading(true);
+
         const response = await fetch(
-          "https://integrations.nivoda.net/graphql-loupe360",
+          "https://nivoda-staging-ui.netlify.app/.netlify/functions/auth",
           {
             method: "POST",
+          },
+          {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              query: `
-                            {
-                                authenticate {
-                                    username_and_password(username: "${
-                                      import.meta.env.VITE_AUTH_EMAIL
-                                    }", password: "${
-                import.meta.env.VITE_AUTH_PASSWORD
-              }") {
-                                        token
-                                    }
-                                }
-                            }
-                        `,
-            }),
           }
         );
 
@@ -58,7 +38,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
           return;
         }
 
-        const token = authData.data.authenticate.username_and_password.token;
+        const token = authData.data.token;
 
         const diamondsResponse = await fetch(
           "https://integrations.nivoda.net/graphql-loupe360",
