@@ -1,9 +1,48 @@
 import React from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
+import { Loader } from "../../components/Loader";
+import { useAuthContext } from "../../context/AuthContext";
 
 export const LoginSignup = () => {
+  const { login, loading } = useAuthContext();
   const [loginTab, setLoginTab] = React.useState(true);
   const [viewPassword, setViewPassword] = React.useState(false);
+
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [cPassword, setCPassword] = React.useState("");
+
+  // const handleSignup = async () => {
+  //   setLoading(true);
+  //   try {
+  //     if (password !== cPassword) {
+  //       throw new Error("Password does not match");
+  //     }
+
+  //     const response = await axios.post(
+  //       "https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/register",
+  //       {
+  //         username: email,
+  //         password: password,
+  //       },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setLoading(false);
+  //       console.log("Signup Data", data);
+  //     }
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.error(error);
+  //   }
+  // };
 
   return (
     <>
@@ -44,6 +83,8 @@ export const LoginSignup = () => {
                             className="w-full px-4 py-3 mt-2 bg-gray-200 rounded-lg dark:text-gray-100 dark:bg-gray-800"
                             name=""
                             placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                         </div>
                         <div className="mt-4">
@@ -60,12 +101,14 @@ export const LoginSignup = () => {
                                 className="w-full px-4 py-3 bg-gray-200 rounded-lg dark:text-gray-400 dark:bg-gray-800 "
                                 name=""
                                 placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                               />
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
                                 height="16"
-                                className="absolute right-0 mr-3 dark:text-gray-300"
+                                className="absolute right-0 mr-3 dark:text-gray-300 cursor-pointer"
                                 fill="#fff"
                                 viewBox="0 0 16 16"
                                 onClick={() => setViewPassword(!viewPassword)}
@@ -88,8 +131,12 @@ export const LoginSignup = () => {
                         <button
                           className="w-full px-4 py-3 mt-4 font-semibold text-gray-700 bg-yellow-400 rounded-lg hover:text-gray-700 hover:bg-blue-200 "
                           type="submit"
+                          onClick={() => {
+                            login(email, password);
+                          }}
+                          disabled={loading}
                         >
-                          LOGIN
+                          {loading ? <Loader /> : "LOGIN"}
                         </button>
                         <div className="mt-4 text-gray-700  dark:text-gray-300">
                           Need an account?
@@ -127,6 +174,8 @@ export const LoginSignup = () => {
                             className="w-full px-4 py-3 mt-2 bg-gray-200 rounded-lg dark:text-gray-100 dark:bg-gray-800"
                             name=""
                             placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                         </div>
                         <div className="mt-4">
@@ -143,6 +192,8 @@ export const LoginSignup = () => {
                                 className="w-full px-4 py-3 bg-gray-200 rounded-lg dark:text-gray-400 dark:bg-gray-800 "
                                 name=""
                                 placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                               />
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -174,13 +225,15 @@ export const LoginSignup = () => {
                                 className="w-full px-4 py-3 bg-gray-200 rounded-lg dark:text-gray-400 dark:bg-gray-800 "
                                 name=""
                                 placeholder="Confirm password"
+                                value={cPassword}
+                                onChange={(e) => setCPassword(e.target.value)}
                               />
                               <svg
                                 onClick={() => setViewPassword(!viewPassword)}
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="16"
                                 height="16"
-                                className="absolute right-0 mr-3 dark:text-gray-300"
+                                className="absolute right-0 mr-3 dark:text-gray-300 pointer"
                                 fill="#fff"
                                 viewBox="0 0 16 16"
                               >
@@ -201,9 +254,10 @@ export const LoginSignup = () => {
                         </div>
                         <button
                           className="w-full px-4 py-3 mt-4 font-semibold text-gray-700 bg-yellow-400 rounded-lg hover:text-gray-700 hover:bg-blue-200 "
-                          type="submit"
+                          onClick={handleSignup}
+                          disabled={loading}
                         >
-                          SIGNUP
+                          {loading ? <Loader /> : "SIGNUP"}
                         </button>
                         <div className="mt-4 text-gray-700  dark:text-gray-300">
                           Already have an account?

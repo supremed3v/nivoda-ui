@@ -7,25 +7,23 @@ export const AuthProvider = ({ children }) => {
   const [authDetails, setAuthDetails] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const login = async (username, password) => {
+    setLoading(true);
     try {
-      const response = await fetch(
+      const response = await axios.post(
         "https://nivodabackend.beartales.net/index.php/wp-json/jwt-auth/v1/token",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username,
-            password,
-          }),
+          username,
+          password,
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = await response.data;
+
+        console.log("Login successful", data);
 
         setAuthDetails(data);
         setIsAuthenticated(true);
@@ -36,11 +34,15 @@ export const AuthProvider = ({ children }) => {
           user_email: data.user_email,
         };
         localStorage.setItem("userData", JSON.stringify(userData));
+        setLoading(false);
       } else {
+        setLoading(false);
+        console.error("Login failed", response);
         throw new Error("Login failed");
       }
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -48,6 +50,7 @@ export const AuthProvider = ({ children }) => {
     const userData = JSON.parse(localStorage.getItem("userData"));
 
     if (userData && userData.token) {
+      setLoading(true);
       setAuthDetails(userData);
       setIsAuthenticated(true);
 
@@ -62,16 +65,19 @@ export const AuthProvider = ({ children }) => {
         )
         .then((response) => {
           setUser(response.data);
+          setLoading(false);
         })
         .catch((error) => {
           console.error(error);
+          setLoading(false);
         });
     } else {
       setIsAuthenticated(false);
       setAuthDetails({});
       setUser(null);
+      setLoading(false);
     }
-  }, [authDetails.token, authDetails.user_email, isAuthenticated, user]);
+  }, [authDetails.token]);
 
   return (
     <AuthContext.Provider
@@ -83,6 +89,8 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         user,
         setUser,
+        loading,
+        setLoading,
       }}
     >
       {children}
