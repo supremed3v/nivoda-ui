@@ -4,8 +4,6 @@ import fetch from "node-fetch";
 
 export async function handler(event, context, callback) {
   try {
-    const { email, password } = JSON.parse(event.body);
-
     const response = await fetch(
       "https://integrations.nivoda.net/graphql-loupe360",
       {
@@ -17,7 +15,9 @@ export async function handler(event, context, callback) {
           query: `
             {
               authenticate {
-                username_and_password(username: "${email}", password: "${password}") {
+                username_and_password(username: "${
+                  import.meta.env.VITE_AUTH_EMAIL
+                }", password: "${import.meta.env.VITE_AUTH_PASSWORD}") {
                   token
                 }
               }
