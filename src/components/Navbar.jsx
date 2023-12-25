@@ -24,7 +24,7 @@ export const Navbar = () => {
     <header
       className={`${
         isScrolled ? "bg-black" : "bg-transparent"
-      } fixed top-0 left-0 right-0 z-10 transition duration-300 ease-in-out`}
+      } fixed top-0 left-0 right-0 z-20 transition duration-300 ease-in-out`}
     >
       <div className="container mx-auto flex flex-wrap justify-between py-2 items-center">
         <div className="flex items-center">
