@@ -1,0 +1,6 @@
+[[redirects]]
+  from = "/**"
+  to = "https://integrations.nivoda.net/graphql-loupe360"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}

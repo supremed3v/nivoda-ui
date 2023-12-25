@@ -1,5 +1,6 @@
 // path-to-your-context-file.js
 
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const NivodaDiamondsContext = createContext();
@@ -14,6 +15,14 @@ export const NivodaDiamondsProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      axios
+        .post("https://nivoda-staging-ui.netlify.app/.netlify/functions/auth")
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       try {
         setLoading(true);
         const response = await fetch(
