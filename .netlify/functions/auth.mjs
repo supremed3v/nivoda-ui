@@ -52,6 +52,7 @@ export async function handler(event, context, callback) {
     return callback(null, {
       statusCode: 500,
       body: JSON.stringify({ error: "Internal server error" }),
+      error: error,
     });
   }
 }
