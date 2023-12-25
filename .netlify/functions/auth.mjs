@@ -1,3 +1,5 @@
+// authFunction.mjs
+
 import fetch from "node-fetch";
 
 export async function handler(event, context, callback) {
@@ -43,6 +45,10 @@ export async function handler(event, context, callback) {
     });
   } catch (error) {
     console.error("Unexpected error:", error);
+
+    // Log the error details
+    console.error(error.stack);
+
     return callback(null, {
       statusCode: 500,
       body: JSON.stringify({ error: "Internal server error" }),
