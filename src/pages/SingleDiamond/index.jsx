@@ -3,15 +3,15 @@ import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ContentSkeleton } from "../../components/libs/skeleton";
 import Accordion from "../../components/libs/Accordion";
+import { useCartContext } from "../../context/CartContext";
+
 export const SingleDiamond = () => {
+  const { addToCart } = useCartContext();
   const { id } = useParams();
-  console.log(id);
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   };
-
-  console.log(import.meta.env.VITE_AUTH_EMAIL);
 
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
@@ -145,14 +145,12 @@ export const SingleDiamond = () => {
     };
 
     fetchData();
-  }, []);
+  }, [id]);
 
   if (loading) {
     // Display skeleton loader while data is being fetched
     return <ContentSkeleton />;
   }
-
-  console.log(data, "diamondsData");
 
   return (
     data && (
@@ -220,7 +218,10 @@ export const SingleDiamond = () => {
                   PDF Certificate Download
                 </a>
               )}
-              <button className="flex ml-auto text-white bg-gray-700 border-0 py-2 mb-2 px-6 focus:outline-none hover:bg-gray-600 rounded">
+              <button
+                className="flex ml-auto text-white bg-gray-700 border-0 py-2 mb-2 px-6 focus:outline-none hover:bg-gray-600 rounded"
+                onClick={() => addToCart(data)}
+              >
                 Add to cart
               </button>
 

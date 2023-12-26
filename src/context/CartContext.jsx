@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 const CartContext = createContext();
 
@@ -13,8 +14,10 @@ export const CartProvider = ({ children }) => {
           x.id === item.id ? { ...x, qty: x.qty + 1 } : x
         )
       );
+      toast.info("Item was already in the cart. Quantity updated.");
     } else {
       setCartItems([...cartItems, { ...item, qty: 1 }]);
+      toast.success("Item added to cart.");
     }
   };
 
@@ -24,12 +27,14 @@ export const CartProvider = ({ children }) => {
       setCartItems((prevCartItems) =>
         prevCartItems.filter((x) => x.id !== item.id)
       );
+      toast.error("Item removed from cart.");
     } else {
       setCartItems((prevCartItems) =>
         prevCartItems.map((x) =>
           x.id === item.id ? { ...x, qty: x.qty - 1 } : x
         )
       );
+      toast.error("Item quantity decreased.");
     }
   };
 
