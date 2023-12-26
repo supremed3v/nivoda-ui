@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { Home } from "./Home";
@@ -10,6 +9,7 @@ import ProtectedRoutes from "../components/libs/ProtectedRoutes";
 import { useAuthContext } from "../context/AuthContext";
 import { LoginSignup } from "./User/LoginSignup";
 import { Cart } from "./Cart";
+import { Checkout } from "./Checkout";
 
 export const Pages = () => {
   const isAuthenticated = useAuthContext();
@@ -31,6 +31,7 @@ export const Pages = () => {
           <Route path="/account" element={<Profile />} />
         </Route>
         <Route path="/login" element={<LoginSignup />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
       <Footer />
     </>

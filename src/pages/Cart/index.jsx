@@ -171,11 +171,10 @@ export const Cart = () => {
                       <span className="mr-2 text-base">$</span>
                       <span>
                         {(getCartSubTotal() / 100).toLocaleString("en-US")}
-                        {/* {cartItems.reduce((a, c) => a + c.price * c.qty, 0)} */}
                       </span>
                     </span>
                   </div>
-                  {!isAuthenticated ? (
+                  {isAuthenticated ? (
                     <Link
                       className="inline-block w-full px-6 py-4 text-lg font-medium leading-6 tracking-tighter text-center text-white bg-blue-500 lg:w-auto hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-xl"
                       to={"/checkout"}
@@ -184,7 +183,7 @@ export const Cart = () => {
                     </Link>
                   ) : (
                     <button
-                      className="inline-block w-full px-6 py-4 text-lg font-medium leading-6 tracking-tighter text-center text-white bg-blue-500 lg:w-auto hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-xl"
+                      className="inline-flex bg-black text-white border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 rounded-lg text-lg"
                       onClick={() => toast.error("Please login to checkout.")}
                     >
                       Checkout
