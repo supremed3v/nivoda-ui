@@ -9,6 +9,7 @@ import { Profile } from "./User/Profile";
 import ProtectedRoutes from "../components/libs/ProtectedRoutes";
 import { useAuthContext } from "../context/AuthContext";
 import { LoginSignup } from "./User/LoginSignup";
+import { Cart } from "./Cart";
 
 export const Pages = () => {
   const isAuthenticated = useAuthContext();
@@ -19,6 +20,7 @@ export const Pages = () => {
         <Route path="/" element={<Home />} />
         <Route path="/diamond/:id" element={<SingleDiamond />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/cart" element={<Cart />} />
         <Route
           element={
             <ProtectedRoutes

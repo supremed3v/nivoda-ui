@@ -4,13 +4,16 @@ import "./index.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { NivodaDiamondsProvider } from "./context/ApiContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <NivodaDiamondsProvider>
     <AuthProvider>
-      <Router>
-        <App />
-      </Router>
+      <CartProvider>
+        <Router>
+          <App />
+        </Router>
+      </CartProvider>
     </AuthProvider>
   </NivodaDiamondsProvider>
 );
