@@ -1,11 +1,14 @@
 import { useCartContext } from "../../context/CartContext";
-
+import { useAuthContext } from "../../context/AuthContext";
 import previewImage from "../../assets/nopreview.jpg";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const Cart = () => {
   const { cartItems, removeFromCart, getCartSubTotal, addQty, removeQty } =
     useCartContext();
+
+  const { isAuthenticated } = useAuthContext();
   return (
     <section className="items-center pt-[140px] pb-[20px] bg-gray-50 font-poppins">
       {cartItems.length === 0 ? (
@@ -172,12 +175,21 @@ export const Cart = () => {
                       </span>
                     </span>
                   </div>
-                  <a
-                    className="inline-block w-full px-6 py-4 text-lg font-medium leading-6 tracking-tighter text-center text-white bg-blue-500 lg:w-auto hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-xl"
-                    href="#"
-                  >
-                    Checkout
-                  </a>
+                  {!isAuthenticated ? (
+                    <Link
+                      className="inline-block w-full px-6 py-4 text-lg font-medium leading-6 tracking-tighter text-center text-white bg-blue-500 lg:w-auto hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-xl"
+                      to={"/checkout"}
+                    >
+                      Checkout
+                    </Link>
+                  ) : (
+                    <button
+                      className="inline-block w-full px-6 py-4 text-lg font-medium leading-6 tracking-tighter text-center text-white bg-blue-500 lg:w-auto hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded-xl"
+                      onClick={() => toast.error("Please login to checkout.")}
+                    >
+                      Checkout
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

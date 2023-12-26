@@ -23,8 +23,6 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 200) {
         const data = await response.data;
 
-        console.log("Login successful", data);
-
         setAuthDetails(data);
         setIsAuthenticated(true);
 
@@ -44,6 +42,13 @@ export const AuthProvider = ({ children }) => {
       console.error(error);
       setLoading(false);
     }
+  };
+
+  const logout = () => {
+    setAuthDetails({});
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem("userData");
   };
 
   useEffect(() => {
@@ -91,6 +96,7 @@ export const AuthProvider = ({ children }) => {
         setUser,
         loading,
         setLoading,
+        logout,
       }}
     >
       {children}

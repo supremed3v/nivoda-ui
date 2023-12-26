@@ -512,15 +512,13 @@ const SideBar = ({
   setDiamondSizeFrom,
   setDiamondSizeTo,
 }) => {
-  console.log(dollarTo);
-  console.log(dollarFrom);
   return (
     <div
       className={`fixed top-0 left-0 w-[720px] h-full bg-white shadow-lg transform ${
         isOpen
           ? "translate-x-0 opacity-100 z-50"
           : "-translate-x-full opacity-0"
-      } transition-transform transition-opacity ease-in-out duration-300 overflow-y-auto`}
+      }  transition-opacity ease-in-out duration-300 overflow-y-auto`}
     >
       <div className="flex  justify-between items-between p-4 bg-gray-900 text-white">
         <span className="text-white">Filters</span>

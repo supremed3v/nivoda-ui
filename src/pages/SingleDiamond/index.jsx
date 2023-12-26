@@ -133,7 +133,6 @@ export const SingleDiamond = () => {
         if (diamondsData.error) {
           console.error("Nivoda Diamonds Query Error:", diamondsData.error);
         } else {
-          console.log("Nivoda Diamonds Data:", diamondsData);
           setData(diamondsData.data.diamond_by_id);
           // Set diamondsData in state or perform other actions as needed
           setLoading(false);
