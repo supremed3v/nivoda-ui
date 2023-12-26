@@ -13,8 +13,9 @@ export async function handler(event) {
   }
 
   try {
+    const requestBody = JSON.parse(event.body);
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: event.body.amount,
+      amount: requestBody.amount,
       currency: "usd",
       automatic_payment_methods: {
         enabled: true,
