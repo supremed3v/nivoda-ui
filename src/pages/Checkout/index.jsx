@@ -21,12 +21,13 @@ export const Checkout = () => {
       <CheckOutSection
         cartItems={cartItems}
         getCartSubTotal={getCartSubTotal}
+        user={user}
       />
     </Elements>
   );
 };
 
-const CheckOutSection = ({ cartItems, getCartSubTotal }) => {
+const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -49,7 +50,66 @@ const CheckOutSection = ({ cartItems, getCartSubTotal }) => {
 
       const { client_secret, paymentIntentId } = response.data;
 
-      console.log(client_secret, paymentIntentId);
+      if (!stripe || !elements) return;
+
+      const result = await stripe.confirmCardPayment(client_secret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            userId: user.id,
+          },
+        },
+      });
+
+      if (result.error) {
+        console.log(result.error.message);
+        setLoading(false);
+        return;
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          console.log("Payment Success");
+          const order_items = [];
+
+          cartItems.forEach((item) => {
+            order_items.push({
+              product_id: item.id,
+              quantity: item.qty,
+              price: item.price,
+            });
+          });
+
+          const data = {
+            paymentIntentId,
+            customer_id: user.id,
+            total_amount: amount,
+            order_date: new Date().toISOString(),
+            order_status: "pending",
+            stripe_payment_intent_id: paymentIntentId,
+            address: "test address",
+            order_items,
+          };
+
+          const response = await axios.post(
+            "https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/orders",
+            data,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (response.data.status === "ORDER_CREATED") {
+            console.log("Order Created");
+            setLoading(false);
+          } else {
+            console.log("Order Failed");
+            console.log(response.data);
+            setLoading(false);
+          }
+          setLoading(false);
+        }
+      }
 
       setLoading(false);
     } catch (error) {

@@ -43,7 +43,6 @@ export async function handler(event, context) {
       statusCode: 200,
       headers,
       body: JSON.stringify({ client_secret, paymentIntentId }),
-      success: true,
     };
   } catch (error) {
     return {
