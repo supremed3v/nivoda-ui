@@ -2,7 +2,7 @@ import { useCartContext } from "../../context/CartContext";
 import { useAuthContext } from "../../context/AuthContext";
 import previewImage from "../../assets/nopreview.jpg";
 import { loadStripe } from "@stripe/stripe-js";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   CardElement,
   useStripe,
@@ -47,6 +47,7 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
     "Delaware",
   ];
 
+  const navigate = useNavigate();
   const handleSubmit = async () => {
     setLoading(true);
 
@@ -123,7 +124,7 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
           if (response.data.status === "ORDER_CREATED") {
             console.log("Order Created");
             setLoading(false);
-            return <Navigate to="/checkout/success" />;
+            navigate("/checkout/success");
           } else {
             console.log("Order Failed");
             console.log(response.data);
@@ -160,9 +161,9 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
                   alt=""
                 />
                 <div className="flex w-full flex-col px-4 py-4">
-                  <span className="font-semibold">
+                  <Link to={`/diamond/${item.id}`} className="font-semibold">
                     {item?.certificate.shape} {item?.certificate.carats}ct{" "}
-                  </span>
+                  </Link>
                   <span className="float-right text-gray-400">
                     {item?.certificate.cut} {item?.certificate.color}{" "}
                     {item?.certificate.clarity}
