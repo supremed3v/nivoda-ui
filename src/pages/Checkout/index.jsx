@@ -81,7 +81,7 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
             total_amount: amount,
             order_date: new Date().toISOString(),
             order_status: "pending",
-            stripe_payment_intent_id: payment_id,
+            stripe_paymentintent_id: payment_id,
             address: "test address",
             order_items,
           };
