@@ -78,9 +78,9 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: elements.getElement(CardElement),
-        },
-        billing_details: {
-          email: email,
+          billing_details: {
+            email: email,
+          },
         },
       });
 
