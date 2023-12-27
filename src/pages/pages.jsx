@@ -10,6 +10,7 @@ import { useAuthContext } from "../context/AuthContext";
 import { LoginSignup } from "./User/LoginSignup";
 import { Cart } from "./Cart";
 import { Checkout } from "./Checkout";
+import { Success } from "./Checkout/Success";
 
 export const Pages = () => {
   const isAuthenticated = useAuthContext();
@@ -32,6 +33,7 @@ export const Pages = () => {
         </Route>
         <Route path="/login" element={<LoginSignup />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout/success" element={<Success />} />
       </Routes>
       <Footer />
     </>
