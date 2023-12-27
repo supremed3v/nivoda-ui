@@ -123,7 +123,7 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
           if (response.data.status === "ORDER_CREATED") {
             console.log("Order Created");
             setLoading(false);
-            <Navigate to="/checkout/success" />;
+            return <Navigate to="/checkout/success" />;
           } else {
             console.log("Order Failed");
             console.log(response.data);
