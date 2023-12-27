@@ -34,7 +34,7 @@ const CheckOutSection = ({ cartItems, getCartSubTotal }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const amount = getCartSubTotal() + 800;
+      const amount = getCartSubTotal() / 100;
       const response = await axios.post(
         "https://nivoda-staging-ui.netlify.app/.netlify/functions/stripe",
         {
