@@ -6,8 +6,9 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [authDetails, setAuthDetails] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
+  const [userOrders, setUserOrders] = useState([]);
 
   const login = async (username, password) => {
     setLoading(true);
@@ -22,6 +23,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.status === 200) {
         const data = await response.data;
+        console.log(data);
 
         setAuthDetails(data);
         setIsAuthenticated(true);
@@ -30,6 +32,7 @@ export const AuthProvider = ({ children }) => {
         const userData = {
           token: data.token,
           user_email: data.user_email,
+          user_id: authDetails.id,
         };
         localStorage.setItem("userData", JSON.stringify(userData));
         setLoading(false);
@@ -84,6 +87,27 @@ export const AuthProvider = ({ children }) => {
     }
   }, [authDetails.token]);
 
+  useEffect(() => {
+    if (user.id) {
+      axios
+        .get(
+          `https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/orders?customer_id=${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authDetails.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          setUserOrders(response.data.orders);
+          console.log(response.data.orders);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [user.id, authDetails.token]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -97,6 +121,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         setLoading,
         logout,
+        userOrders,
       }}
     >
       {children}
