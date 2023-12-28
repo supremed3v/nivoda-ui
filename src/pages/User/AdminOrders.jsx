@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const AdminOrders = () => {
-  const { adminOrders, setRefresh } = useAuthContext();
+  const { adminOrders, setAdminOrders, setRefresh } = useAuthContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,6 +72,12 @@ export const AdminOrders = () => {
         closeModal();
         setLoading(false);
         setRefresh(true);
+
+        // Update the adminOrders state with the new data
+        const updatedOrders = adminOrders.map((order) =>
+          order.id === orderId ? { ...order, order_status: orderStatus } : order
+        );
+        setAdminOrders(updatedOrders);
         return toast.success("Order status updated successfully");
       }
     } catch (error) {
@@ -80,7 +86,6 @@ export const AdminOrders = () => {
     }
   };
 
-  console.log(adminOrders);
   return (
     <div>
       {adminOrders && adminOrders.length > 0 ? (

@@ -35,7 +35,6 @@ export const Pages = () => {
         )
         .then((response) => {
           setUserRole(response.data.role);
-          console.log(userRole);
         })
         .catch((error) => {
           console.error(error);

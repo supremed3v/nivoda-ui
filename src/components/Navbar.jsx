@@ -4,11 +4,13 @@ import { FaBagShopping } from "react-icons/fa6";
 
 import { RiAccountCircleLine } from "react-icons/ri";
 import { useAuthContext } from "../context/AuthContext";
+import { useCartContext } from "../context/CartContext";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const { isAuthenticated, userRole } = useAuthContext();
+  const { cartItems } = useCartContext();
 
   const handleScroll = () => {
     const scrollTop = window.scrollY;
@@ -38,11 +40,13 @@ export const Navbar = () => {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              stroke="currentColor"
+              stroke={`${isScrolled ? "white" : "white"}`}
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              className="w-10 h-10 text-white p-2 bg-white rounded-full"
+              className={`${
+                isScrolled ? "text-black" : "text-black"
+              } w-10 h-10 text-white p-2 bg-white rounded-full`}
               viewBox="0 0 24 24"
             >
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
@@ -57,15 +61,14 @@ export const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex items-center">
-          <Link to="/cart" className="mr-5">
-            <FaBagShopping
-              size="26px"
-              //  color={isScrolled ? "#fff" : "#000"}
-              style={{
-                color: "white",
-              }}
-            />
+        <div className="flex items-center relative">
+          <Link to="/cart" className="mr-5 relative">
+            <FaBagShopping size="26px" color={isScrolled ? "#fff" : "#000"} />
+            {cartItems.length !== 0 && (
+              <span className="absolute top-0 right-0 -mt-2 -mr-2 w-4 h-4 bg-pink-500 rounded-full flex items-center justify-center text-xs text-white">
+                {cartItems.length}
+              </span>
+            )}
           </Link>
           <Link
             to={
@@ -77,9 +80,7 @@ export const Navbar = () => {
           >
             <RiAccountCircleLine
               size="28px"
-              style={{
-                color: "white",
-              }}
+              color={isScrolled ? "#fff" : "#000"}
             />
           </Link>
         </div>
@@ -116,16 +117,6 @@ export const Navbar = () => {
             } mr-5 py-4 title-font font-medium`}
           >
             Cart
-          </Link>
-          <Link
-            to="/"
-            className={`${
-              isScrolled
-                ? "text-white hover:text-gray-300"
-                : "text-black hover:border-gray-500 border-transparent border-b-2"
-            } mr-5 py-4 title-font font-medium`}
-          >
-            Fourth Link
           </Link>
         </nav>
       </div>

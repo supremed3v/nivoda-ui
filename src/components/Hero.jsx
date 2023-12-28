@@ -11,10 +11,10 @@ export const Hero = () => {
           transition={{ type: "ease", stiffness: 100, duration: 2 }}
           className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center"
         >
-          <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium py-10">
+          <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium py-10 text-black">
             The World's Largest Diamond Store
           </h1>
-          <p className="mb-8 leading-relaxed text-2xl">
+          <p className="mb-8 leading-relaxed text-2xl text-black">
             It is a long established fact that a reader will be distracted by
             the readable content of a page when looking at its layout. The point
             of using Lorem Ipsum is that it has a more-or-less normal

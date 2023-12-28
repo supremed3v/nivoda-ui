@@ -91,7 +91,6 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
         return;
       } else {
         if (result.paymentIntent.status === "succeeded") {
-          console.log("Payment Success");
           const order_items = [];
 
           cartItems.forEach((item) => {
@@ -122,12 +121,9 @@ const CheckOutSection = ({ cartItems, getCartSubTotal, user }) => {
           );
 
           if (response.data.status === "ORDER_CREATED") {
-            console.log("Order Created");
             setLoading(false);
             navigate("/checkout/success");
           } else {
-            console.log("Order Failed");
-            console.log(response.data);
             setLoading(false);
           }
           setLoading(false);

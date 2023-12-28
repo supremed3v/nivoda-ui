@@ -158,9 +158,6 @@ export const SingleOrder = () => {
     fetchData();
   }, [id]);
 
-  console.log("order", order);
-  console.log("orderItems", orderItems);
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -273,7 +270,7 @@ export const SingleOrder = () => {
             <span className="flex items-center">
               <span className="ml-3 mr-1 text-sm">Address:</span>
 
-              <p className="text-sm text-gray-500">{order.address}</p>
+              <p className="text-sm text-gray-500">{order?.address}</p>
             </span>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-4 ">

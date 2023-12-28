@@ -170,9 +170,6 @@ export const AdminSingleOrder = () => {
     fetchData();
   }, [id]);
 
-  console.log(customer);
-  console.log(order);
-
   if (loading) {
     return <div>Loading...</div>;
   }

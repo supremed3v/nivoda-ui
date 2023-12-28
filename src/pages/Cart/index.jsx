@@ -132,7 +132,7 @@ export const Cart = () => {
                       </div>
                     </div>
                     <div className="w-full px-4 xl:w-auto">
-                      <span className="text-xl font-medium text-blue-500 dark:text-blue-400 ">
+                      <span className="text-xl font-medium text-black ">
                         <span className="text-sm">$</span>
                         <span>
                           {(item.price / 100).toLocaleString("en-US")}
@@ -167,7 +167,7 @@ export const Cart = () => {
 
                   <div className="flex items-center justify-between px-10 py-4 mb-6 font-medium leading-8 bg-gray-100 border rounded-xl">
                     <span>Total</span>
-                    <span className="flex items-center text-xl text-blue-500">
+                    <span className="flex items-center text-xl text-black">
                       <span className="mr-2 text-base">$</span>
                       <span>
                         {(getCartSubTotal() / 100).toLocaleString("en-US")}
