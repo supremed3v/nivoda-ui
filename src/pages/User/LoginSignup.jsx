@@ -1,48 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { Loader } from "../../components/Loader";
 import { useAuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const LoginSignup = () => {
-  const { login, loading } = useAuthContext();
+  const { login, loading, handleSignup, authDetails } = useAuthContext();
   const [loginTab, setLoginTab] = React.useState(true);
   const [viewPassword, setViewPassword] = React.useState(false);
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [cPassword, setCPassword] = React.useState("");
+  const navigate = useNavigate();
 
-  // const handleSignup = async () => {
-  //   setLoading(true);
-  //   try {
-  //     if (password !== cPassword) {
-  //       throw new Error("Password does not match");
-  //     }
+  const onSignup = () => {
+    if (password === cPassword && email !== "" && password !== "") {
+      handleSignup(email, password);
+      setLoginTab(true);
+    } else {
+      toast.error("Password does not match");
+    }
+  };
 
-  //     const response = await axios.post(
-  //       "https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/register",
-  //       {
-  //         username: email,
-  //         password: password,
-  //       },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
+  const onLogin = () => {
+    login(email, password);
+  };
 
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       setLoading(false);
-  //       console.log("Signup Data", data);
-  //     }
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.error(error);
-  //   }
-  // };
+  useEffect(() => {
+    if (authDetails.token) {
+      navigate("/");
+    }
+  }, [authDetails]);
 
   return (
     <>
@@ -131,9 +121,7 @@ export const LoginSignup = () => {
                         <button
                           className="w-full px-4 py-3 mt-4 font-semibold text-gray-700 bg-yellow-400 rounded-lg hover:text-gray-700 hover:bg-blue-200 "
                           type="submit"
-                          onClick={() => {
-                            login(email, password);
-                          }}
+                          onClick={onLogin}
                           disabled={loading}
                         >
                           {loading ? <Loader /> : "LOGIN"}
@@ -254,7 +242,7 @@ export const LoginSignup = () => {
                         </div>
                         <button
                           className="w-full px-4 py-3 mt-4 font-semibold text-gray-700 bg-yellow-400 rounded-lg hover:text-gray-700 hover:bg-blue-200 "
-                          onClick={handleSignup}
+                          onClick={onSignup}
                           disabled={loading}
                         >
                           {loading ? <Loader /> : "SIGNUP"}

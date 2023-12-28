@@ -26,8 +26,6 @@ export const AuthProvider = ({ children }) => {
 
       if (response.status === 200) {
         const data = await response.data;
-        console.log(data);
-
         setAuthDetails(data);
         setIsAuthenticated(true);
 
@@ -49,7 +47,30 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const handleSignup = async (email, password) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/register",
+        {
+          username: email,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
+      if (response.ok) {
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+    }
+  };
   const logout = () => {
     setAuthDetails({});
     setIsAuthenticated(false);
@@ -149,6 +170,7 @@ export const AuthProvider = ({ children }) => {
         adminOrders,
         refresh,
         setRefresh,
+        handleSignup,
       }}
     >
       {children}
