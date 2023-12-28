@@ -1,15 +1,22 @@
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-export const Orders = () => {
-  const { userOrders, user } = useAuthContext();
+export const AdminOrders = () => {
+  const { adminOrders, setRefresh } = useAuthContext();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [orderStatus, setOrderStatus] = useState(null);
+  const [orderId, setOrderId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [authToken, setAuthToken] = useState(null);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const filteredOrders = userOrders.filter((order) =>
+  const filteredOrders = adminOrders.filter((order) =>
     Object.values(order).some(
       (value) =>
         value &&
@@ -22,10 +29,66 @@ export const Orders = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  const openModal = (orderId, orderStatus) => {
+    setShowModal(true);
+    setOrderId(orderId);
+    setOrderStatus(orderStatus);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setOrderId(null);
+  };
+
+  useEffect(() => {
+    const authDetails = JSON.parse(localStorage.getItem("userData"));
+    if (authDetails && authDetails.token) {
+      setAuthToken(authDetails.token);
+    }
+  }, []);
+
+  const handleUpdateStatus = async () => {
+    setLoading(true);
+    try {
+      if (
+        orderStatus === "" ||
+        orderStatus === null ||
+        orderStatus === undefined ||
+        authToken.token === null
+      ) {
+        console.error("Invalid data");
+      }
+      const response = await axios.post(
+        `https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/orders/update?order_id=${orderId}&order_status=${orderStatus}`,
+        {
+          headers: {
+            Authorization: `Bearer '${authToken}'`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        closeModal();
+        setLoading(false);
+        setRefresh(true);
+        return toast.success("Order status updated successfully");
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
+  console.log(adminOrders);
   return (
     <div>
-      {userOrders && userOrders.length > 0 ? (
-        <section className="items-center lg:flex bg-gray-50 font-poppins">
+      {adminOrders && adminOrders.length > 0 ? (
+        <section
+          className={`items-center lg:flex bg-gray-50 font-poppins ${
+            showModal && "opacity-50"
+          }`}
+        >
           <div className="justify-center flex-1 max-w-6xl px-4 py-4 mx-auto lg:py-8 md:px-6">
             <div className="overflow-x-auto bg-white rounded shadow">
               <div className="">
@@ -85,7 +148,7 @@ export const Orders = () => {
                       </th>
 
                       <th className="px-6 py-3 font-medium  ">Created</th>
-                      <th className="px-6 py-3 font-medium  ">Client</th>
+                      <th className="px-6 py-3 font-medium  ">Client ID</th>
                       <th className="px-6 py-3 font-medium  ">
                         Products Count
                       </th>
@@ -107,10 +170,10 @@ export const Orders = () => {
                           <p className=" ">{order.id}</p>
                         </td>
                         <td className="px-6 text-sm font-medium  ">
-                          {order.order_date}
+                          {order.order_date.slice(0, 10)}
                         </td>
                         <td className="px-6 text-sm font-medium  ">
-                          {user.name}
+                          {order.customer_id}
                         </td>
                         <td className="px-6 text-sm font-medium  ">
                           <span className="inline-block px-2 py-1 text-gray-700  ">
@@ -133,11 +196,20 @@ export const Orders = () => {
                           {order.total_amount}
                         </td>
                         <td>
-                          <Link to={`/account/orders/${order.id}`}>
+                          <Link to={`/admin/orders/${order.id}`}>
                             <span className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700">
                               View
                             </span>
                           </Link>
+                          <button
+                            onClick={() =>
+                              openModal(order.id, order.order_status)
+                            }
+                          >
+                            <span className="px-4 py-2 text-sm text-white bg-yellow-500 rounded-md hover:bg-yellow-600">
+                              Edit
+                            </span>
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -146,15 +218,15 @@ export const Orders = () => {
                 <div className="flex flex-wrap items-center justify-between px-6 py-3">
                   <p className="mb-4 text-xs lg:mb-0  ">
                     Showing {indexOfFirstItem + 1} to{" "}
-                    {indexOfLastItem > userOrders.length
-                      ? userOrders.length
+                    {indexOfLastItem > adminOrders.length
+                      ? adminOrders.length
                       : indexOfLastItem}{" "}
-                    of {userOrders.length} entries
+                    of {adminOrders.length} entries
                   </p>
                   <nav aria-label="page-navigation">
                     <ul className="flex mb-4 list-style-none lg:mb-0">
                       {Array.from({
-                        length: Math.ceil(userOrders.length / itemsPerPage),
+                        length: Math.ceil(adminOrders.length / itemsPerPage),
                       }).map((_, index) => (
                         <li
                           key={index}
@@ -183,6 +255,57 @@ export const Orders = () => {
           <p className="text-lg text-gray-500">
             Buy some items to see them here.
           </p>
+        </div>
+      )}
+      {adminOrders && adminOrders.length > 0 && showModal && (
+        <div className="absolute top-0 left-0 flex items-center justify-center w-full h-full">
+          <div className="h-[180px] p-6 mx-2 text-left bg-white rounded-md shadow-xl md:max-w-4xl">
+            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <h3
+                className="text-lg font-medium leading-6 text-gray-900"
+                id="modal-headline"
+              >
+                Edit Order Status for Order #{orderId}
+              </h3>
+              <div className="mt-2">
+                <select
+                  name=""
+                  id=""
+                  defaultValue={orderStatus || "pending"}
+                  onChange={(e) => setOrderStatus(e.target.value)}
+                >
+                  <option value="pending" disabled={orderStatus === "pending"}>
+                    Pending
+                  </option>
+                  <option
+                    value="received"
+                    disabled={orderStatus === "received"}
+                  >
+                    Received
+                  </option>
+                  <option value="shipped" disabled={orderStatus === "shipped"}>
+                    Shipped
+                  </option>
+                </select>
+              </div>
+              <div className="mt-10">
+                <button className="bg-gray-500 mx-4" onClick={closeModal}>
+                  <span className="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700">
+                    Close
+                  </span>
+                </button>
+                <button
+                  className="bg-gray-500"
+                  onClick={handleUpdateStatus}
+                  disabled={loading}
+                >
+                  <span className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                    {loading ? "Loading..." : "Update Status"}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

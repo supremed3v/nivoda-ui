@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import { FaBagShopping } from "react-icons/fa6";
 
 import { RiAccountCircleLine } from "react-icons/ri";
+import { useAuthContext } from "../context/AuthContext";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const { isAuthenticated, userRole } = useAuthContext();
 
   const handleScroll = () => {
     const scrollTop = window.scrollY;
@@ -64,7 +67,14 @@ export const Navbar = () => {
               }}
             />
           </Link>
-          <Link to="/account" className="mr-5">
+          <Link
+            to={
+              isAuthenticated && userRole === "administrator"
+                ? "/admin"
+                : "/account"
+            }
+            className="mr-5"
+          >
             <RiAccountCircleLine
               size="28px"
               style={{

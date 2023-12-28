@@ -9,6 +9,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
   const [userOrders, setUserOrders] = useState([]);
+  const [userRole, setUserRole] = useState("");
+  const [adminOrders, setAdminOrders] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   const login = async (username, password) => {
     setLoading(true);
@@ -88,7 +91,7 @@ export const AuthProvider = ({ children }) => {
   }, [authDetails.token]);
 
   useEffect(() => {
-    if (user.id) {
+    if (isAuthenticated && user && user.id) {
       axios
         .get(
           `https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/orders?customer_id=${user.id}`,
@@ -100,13 +103,32 @@ export const AuthProvider = ({ children }) => {
         )
         .then((response) => {
           setUserOrders(response.data.orders);
-          console.log(response.data.orders);
         })
         .catch((error) => {
           console.error(error);
         });
     }
-  }, [user.id, authDetails.token]);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated && userRole === "administrator") {
+      axios
+        .get(
+          `https://nivodabackend.beartales.net/index.php/wp-json/wp/v2/orders/all`,
+          {
+            headers: {
+              Authorization: `Bearer ${authDetails.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          setAdminOrders(response.data.orders);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [isAuthenticated, userRole, authDetails.token, refresh]);
 
   return (
     <AuthContext.Provider
@@ -122,6 +144,11 @@ export const AuthProvider = ({ children }) => {
         setLoading,
         logout,
         userOrders,
+        userRole,
+        setUserRole,
+        adminOrders,
+        refresh,
+        setRefresh,
       }}
     >
       {children}
