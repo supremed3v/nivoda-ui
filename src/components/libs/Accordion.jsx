@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const Accordion = ({ title, details }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
@@ -10,10 +10,10 @@ const Accordion = ({ title, details }) => {
   return (
     <div className="mb-4 p-4 bg-gray-200 rounded-md">
       <div
-        className="cursor-pointer flex justify-between items-center mb-2 text-indigo-500"
+        className="cursor-pointer flex justify-between items-center mb-2 text-gray-600"
         onClick={toggleAccordion}
       >
-        <span>{title}</span>
+        <span className="text-lg font-medium">{title}</span>
         <span className={`transform ${isOpen ? "rotate-180" : "rotate-0"}`}>
           ▼
         </span>
