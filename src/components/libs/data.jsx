@@ -294,7 +294,6 @@ export const colorData = [
   { id: 8, color: "K" },
   { id: 9, color: "L" },
   { id: 10, color: "M" },
-  { id: 11, color: "N" },
 ];
 
 // Cut Data

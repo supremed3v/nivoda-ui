@@ -55,7 +55,10 @@ export const Explore = () => {
         </button>
       </div>
       {loading ? (
-        <CardsSkeleton />
+        <>
+          <Filter />
+          <CardsSkeleton />
+        </>
       ) : (
         <>
           <Filter />

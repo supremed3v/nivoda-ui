@@ -20,8 +20,9 @@ export const Filter = () => {
     setLabGrown,
     sortOrder,
     setSortOrder,
+    loading,
+    setLoading,
   } = useNivodaDiamonds();
-  const [loading, setLoading] = useState(false);
   const defaultValues = {
     selectedShapes: ["ROUND"],
     selectedColors: ["H", "G", "F", "E", "D"],
@@ -362,13 +363,18 @@ export const Filter = () => {
         ) {
           setAnyFilterApplied(true);
         }
-        toggleSidebar();
       }
     } catch (error) {
       console.error("Error fetching Nivoda data:", error);
       setLoading(false);
     }
   };
+
+  loading && (
+    <div className="flex justify-center items-center">
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+    </div>
+  );
 
   const [showSort, setShowSort] = useState(false);
 
@@ -401,20 +407,6 @@ export const Filter = () => {
     <section className="text-gray-400 body-font  bg-slate-100">
       <div className="container px-5 py-2 mx-auto">
         <div className="group relative inline-flex text-left justify-between w-full items-start">
-          <button
-            type="button"
-            className="group w-24 relative px-4 py-3 rounded-md text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-            style={{
-              backgroundColor: "rgb(45, 60, 92)",
-            }}
-            onClick={toggleSidebar}
-          >
-            All filters
-            {anyFilterApplied && (
-              <span className="absolute top-0 right-0 w-3 h-3 bg-pink-500 rounded-full"></span>
-            )}
-          </button>
-
           <button
             type="button"
             className="ml-2 px-4 py-3 rounded-md text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
@@ -459,39 +451,38 @@ export const Filter = () => {
               onClick={toggleSidebar}
             />
           )}
-
-          <SideBar
-            isOpen={isSidebarOpen}
-            onClose={toggleSidebar}
-            selectedDeliveryTimes={selectedDeliveryTimes}
-            selectedCertificates={selectedCertificates}
-            onDeliveryTimeSelect={handleDeliveryTimeSelection}
-            onCertificateSelect={handleCertificateSelection}
-            selectedShapes={selectedShapes}
-            onShapeSelect={onShapeSelect}
-            onColorSelect={onColorSelect}
-            selectedColors={selectedColors}
-            onClaritySelect={onClaritySelect}
-            selectedClarity={selectedClarity}
-            selectedCuts={selectedCuts}
-            onCutSelect={onCutSelect}
-            selectedPolishes={selectedPolishes}
-            onPolishSelect={onPolishSelect}
-            selectedSymmetries={selectedSymmetries}
-            onSymmetrySelect={onSymmetrySelect}
-            handleFiltersApplied={handleFiltersApplied}
-            onClearFilters={onClearFilters}
-            selectedFlourescence={selectedFlourescence}
-            onFluorescenceSelect={onFluorescenceSelect}
-            loading={loading}
-            dollarFrom={dollarFrom}
-            setDollarFrom={setDollarFrom}
-            dollarTo={dollarTo}
-            setDollarTo={setDollarTo}
-            setDiamondSizeFrom={setDiamondSizeFrom}
-            setDiamondSizeTo={setDiamondSizeTo}
-          />
         </div>
+        <SideBar
+          isOpen={isSidebarOpen}
+          onClose={toggleSidebar}
+          selectedDeliveryTimes={selectedDeliveryTimes}
+          selectedCertificates={selectedCertificates}
+          onDeliveryTimeSelect={handleDeliveryTimeSelection}
+          onCertificateSelect={handleCertificateSelection}
+          selectedShapes={selectedShapes}
+          onShapeSelect={onShapeSelect}
+          onColorSelect={onColorSelect}
+          selectedColors={selectedColors}
+          onClaritySelect={onClaritySelect}
+          selectedClarity={selectedClarity}
+          selectedCuts={selectedCuts}
+          onCutSelect={onCutSelect}
+          selectedPolishes={selectedPolishes}
+          onPolishSelect={onPolishSelect}
+          selectedSymmetries={selectedSymmetries}
+          onSymmetrySelect={onSymmetrySelect}
+          handleFiltersApplied={handleFiltersApplied}
+          onClearFilters={onClearFilters}
+          selectedFlourescence={selectedFlourescence}
+          onFluorescenceSelect={onFluorescenceSelect}
+          loading={loading}
+          dollarFrom={dollarFrom}
+          setDollarFrom={setDollarFrom}
+          dollarTo={dollarTo}
+          setDollarTo={setDollarTo}
+          setDiamondSizeFrom={setDiamondSizeFrom}
+          setDiamondSizeTo={setDiamondSizeTo}
+        />
       </div>
     </section>
   );
@@ -527,6 +518,8 @@ const SideBar = ({
   setDollarTo,
   setDiamondSizeFrom,
   setDiamondSizeTo,
+  diamondSizeFrom,
+  diamondSizeTo,
 }) => {
   const [showMore, setShowMore] = useState(true);
 
@@ -534,22 +527,9 @@ const SideBar = ({
     setShowMore(!showMore);
   };
   return (
-    <div
-      className={`fixed top-0 left-0 w-[720px] h-full bg-white shadow-lg transform ${
-        isOpen
-          ? "translate-x-0 opacity-100 z-50"
-          : "-translate-x-full opacity-0"
-      }  transition-opacity ease-in-out duration-300 overflow-y-auto`}
-    >
-      <div className="flex  justify-between items-between p-4 bg-gray-900 text-white">
-        <span className="text-white">Filters</span>
-        <button onClick={onClose} className="focus:outline-none text-left">
-          Close
-        </button>
-      </div>
-
+    <div className="w-full  z-50">
       <div className="flex flex-col flex-grow p-4">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-4">
           {/* Delivery Time */}
           <div>
             <h2 className="text-lg font-bold mb-2">Delivery Time</h2>
@@ -589,7 +569,7 @@ const SideBar = ({
           {/* Shapes */}
           <div className="col-span-2 mt-4">
             <h2 className="text-lg font-bold mb-2">Shapes</h2>
-            <div className="grid grid-cols-6 gap-4">
+            <div className="grid lg:grid-cols-10 sm:grid-cols-8 gap-4">
               {shapeData.map((shape) => (
                 <button
                   key={shape.id}
@@ -598,74 +578,76 @@ const SideBar = ({
                     selectedShapes.includes(shape.name)
                       ? "border-pink-500 text-pink-500"
                       : "text-black bg-white border-gray-300"
-                  } px-4 py-2 rounded-md border focus:outline-none flex flex-col items-center justify-center`}
+                  } px-4 py-2 rounded-md border focus:outline-none flex flex-col w-[50px] items-center justify-center`}
                 >
                   {shape.img}
-                  {shape.name}
                 </button>
               ))}
             </div>
           </div>
 
           {/* Colour */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Colour</h2>
-            {colorData.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => onColorSelect(option.color)}
-                className={`${
-                  selectedColors.includes(option.color)
-                    ? "border-pink-500 text-pink-500"
-                    : "text-black bg-white border-gray-300"
-                } px-4 py-2 rounded-md border focus:outline-none`}
-                style={{
-                  margin: "2px",
-                }}
-              >
-                {option.color}
-              </button>
-            ))}
+
+          <div className="flex justify-evenly items-center col-span-4">
+            <div>
+              <h2 className="text-lg font-bold mb-2">Colour</h2>
+              {colorData.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => onColorSelect(option.color)}
+                  className={`${
+                    selectedColors.includes(option.color)
+                      ? "border-pink-500 text-pink-500"
+                      : "text-black bg-white border-gray-300"
+                  } px-4 py-2 rounded-md border focus:outline-none`}
+                  style={{
+                    margin: "2px",
+                  }}
+                >
+                  {option.color}
+                </button>
+              ))}
+            </div>
+            {/* Clarity */}
+            <div>
+              <h2 className="text-lg font-bold mb-2">Clarity</h2>
+              {clarityData.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => onClaritySelect(option.id)}
+                  className={`${
+                    selectedClarity.includes(option.id)
+                      ? "border-pink-500 text-pink-500"
+                      : "text-black bg-white border-gray-300"
+                  } px-4 py-2 m-1 rounded-md border focus:outline-none`}
+                >
+                  {option.clarity}
+                </button>
+              ))}
+            </div>
+
+            {/* Cut */}
+            <div>
+              <h2 className="text-lg font-bold mb-2">Cut</h2>
+              {cutData.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => onCutSelect(option.cut)}
+                  className={`${
+                    selectedCuts.includes(option.cut)
+                      ? "border-pink-500 text-pink-500"
+                      : "text-black bg-white border-gray-300"
+                  } px-4 py-2 m-1 rounded-md border focus:outline-none`}
+                >
+                  {option.description}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Clarity */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Clarity</h2>
-            {clarityData.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => onClaritySelect(option.id)}
-                className={`${
-                  selectedClarity.includes(option.id)
-                    ? "border-pink-500 text-pink-500"
-                    : "text-black bg-white border-gray-300"
-                } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-              >
-                {option.clarity}
-              </button>
-            ))}
-          </div>
-
-          {/* Cut */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Cut</h2>
-            {cutData.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => onCutSelect(option.cut)}
-                className={`${
-                  selectedCuts.includes(option.cut)
-                    ? "border-pink-500 text-pink-500"
-                    : "text-black bg-white border-gray-300"
-                } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-              >
-                {option.description}
-              </button>
-            ))}
-          </div>
           <div
             className="
-          col-span-2 mt-4 mb-4
+          col-span-4 mt-4 mb-4
           "
           >
             <hr className="my-4" />
@@ -683,7 +665,11 @@ const SideBar = ({
 
           {showMore === false ? (
             <>
-              <div>
+              <div
+                className="
+          col-span-4 mt-4 mb-4
+          "
+              >
                 <h2 className="text-lg font-bold mb-2">Polish</h2>
                 {polishData.map((option) => (
                   <button
@@ -700,7 +686,7 @@ const SideBar = ({
                 ))}
               </div>
 
-              <div>
+              <div className="col-span-2 mt-4 mb-4">
                 <h2 className="text-lg font-bold mb-2">Symmetry</h2>
                 {symmetryData.map((option) => (
                   <button
@@ -738,93 +724,92 @@ const SideBar = ({
               <hr className="my-4" />
             </>
           ) : null}
+        </div>
+      </div>
 
-          {/* Price */}
+      <div className="border-t-2 pt-3 flex sm:flex-col justify-between flex-col items-between py-2">
+        <div className=" mt-4 mb-4">
+          <h2 className="text-lg font-bold mb-2">Price</h2>
+          <div className="grid grid-cols-8 gap-10">
+            <div className="col-span-4">
+              <label htmlFor="">
+                <span className="text-gray-600 text-center">Min $</span>
+              </label>
 
-          <div className="col-span-2 mt-4 mb-4">
-            <h2 className="text-lg font-bold mb-2">Price</h2>
-            <div className="grid grid-cols-8 gap-1">
-              <div className="col-span-1">
-                <button className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none">
-                  <span className="text-pink-500 text-center">Price</span>
-                </button>
-              </div>
-              <div className="col-span-3">
-                <label htmlFor="">
-                  <span className="text-gray-600 text-center">Min</span>
-                </label>
-
-                <input
-                  type="number"
-                  placeholder="Min: (eg: 0)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-                  onChange={(e) => setDollarFrom(e.target.value)}
-                />
-              </div>
-              <div className="col-span-3">
-                <label htmlFor="">
-                  <span className="text-gray-600">Max</span>
-                </label>
-                <input
-                  type="number"
-                  placeholder="Max: (eg: 100000)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-                  onChange={(e) => setDollarTo(e.target.value)}
-                />
-              </div>
+              <input
+                type="number"
+                placeholder="Min: (eg: 0)"
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black"
+                onChange={(e) => setDollarFrom(e.target.value)}
+                value={dollarFrom}
+              />
+            </div>
+            <div className="col-span-4">
+              <label htmlFor="">
+                <span className="text-gray-600">Max $</span>
+              </label>
+              <input
+                type="number"
+                placeholder="Max: (eg: 100000)"
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black"
+                onChange={(e) => setDollarTo(e.target.value)}
+                value={dollarTo}
+              />
             </div>
           </div>
+        </div>
 
-          {/* Diamond Size */}
-          <div className="col-span-2 mt-4 mb-4">
-            <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
-            <div className="grid grid-cols-8 gap-1">
-              <div className="col-span-3">
-                <label htmlFor="">
-                  <span className="text-gray-600 text-center">Min</span>
-                </label>
+        {/* Diamond Size */}
+        <div className="mt-4 mb-4">
+          <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
+          <div className="grid grid-cols-8 gap-10">
+            <div className="col-span-4">
+              <label htmlFor="">
+                <span className="text-gray-600 text-center">Min</span>
+              </label>
 
-                <input
-                  type="number"
-                  step="any"
-                  placeholder="0 ct  use . for decimals (eg: 0.5)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-                  onChange={(e) => setDiamondSizeFrom(e.target.value)}
-                />
-              </div>
-              <div className="col-span-3">
-                <label htmlFor="">
-                  <span className="text-gray-600">Max</span>
-                </label>
-                <input
-                  type="number"
-                  step="any"
-                  placeholder="0 ct  use . for decimals (eg: 0.5)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-                  onChange={(e) => setDiamondSizeTo(e.target.value)}
-                />
-              </div>
+              <input
+                type="number"
+                step="any"
+                placeholder="0 ct  use . for decimals (eg: 0.5)"
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                onChange={(e) => setDiamondSizeFrom(e.target.value)}
+                value={diamondSizeFrom}
+              />
+            </div>
+            <div className="col-span-4">
+              <label htmlFor="">
+                <span className="text-gray-600">Max</span>
+              </label>
+              <input
+                type="number"
+                step="any"
+                placeholder="0 ct  use . for decimals (eg: 0.5)"
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                onChange={(e) => setDiamondSizeTo(e.target.value)}
+                value={diamondSizeTo}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div className=" sticky bottom-0 left-0 right-0 border-t-2 pt-3 bg-gray-50 text-white flex justify-evenly items-center py-2">
+      <div className="border-t-2 pt-3 bg-gray-50 text-white flex  justify-center items-center py-2">
         <button
           onClick={onClearFilters}
-          className="w-20 mr-4 h-full text-black"
+          className="w-20 mb-2 h-full text-black"
         >
           Clear
         </button>
         <button
           onClick={onClearFilters}
-          className="w-20 mr-4 h-full text-black"
+          className="w-20 mb-2 h-full text-black"
         >
           Cancel
         </button>
         <button
           onClick={handleFiltersApplied}
-          className="bg-gray-900 w-full p-2 h-full rounded focus:outline-none"
+          className="bg-gray-900 w-full p-2 h-full rounded focus:outline-none mb-2"
           disabled={loading}
         >
           {loading ? "Fetching Diamonds..." : "Apply Filters"}

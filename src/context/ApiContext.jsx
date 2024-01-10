@@ -310,6 +310,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
         setLabGrown,
         loading,
         sortOrder,
+        setLoading,
         setSortOrder,
         initialDiamondsData,
         setInitialDiamondsData,
