@@ -339,10 +339,7 @@ export const clarityData = [
   { id: "VS2", clarity: "VS2" },
   { id: "SI1", clarity: "SI1" },
   { id: "SI2", clarity: "SI2" },
-  { id: "SI3", clarity: "SI3" },
   { id: "I1", clarity: "I1" },
-  { id: "I2", clarity: "I2" },
-  { id: "I3", clarity: "I3" },
 ];
 
 // Fluorescence Data

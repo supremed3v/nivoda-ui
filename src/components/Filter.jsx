@@ -340,7 +340,10 @@ export const Filter = () => {
         console.error("Nivoda Diamonds Query Error:", diamondsData.error);
         setLoading(false);
       } else {
-        setFilteredDiamonds(diamondsData.data.diamonds_by_query.items);
+        const filterImage = diamondsData.data.diamonds_by_query.items.filter(
+          (item) => item.image !== null
+        );
+        setFilteredDiamonds(filterImage);
         setLoading(false);
         if (
           selectedClarity ||
@@ -526,6 +529,10 @@ const SideBar = ({
   setDiamondSizeTo,
 }) => {
   const [showMore, setShowMore] = useState(true);
+
+  const handleShowMore = () => {
+    setShowMore(!showMore);
+  };
   return (
     <div
       className={`fixed top-0 left-0 w-[720px] h-full bg-white shadow-lg transform ${
@@ -656,6 +663,23 @@ const SideBar = ({
               </button>
             ))}
           </div>
+          <div
+            className="
+          col-span-2 mt-4 mb-4
+          "
+          >
+            <hr className="my-4" />
+            <h2 className="text-lg font-bold mb-2 text-black">
+              Advanced Filters
+            </h2>
+            <button
+              onClick={() => handleShowMore()}
+              className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none"
+            >
+              {showMore ? "Show Advanced Filters" : "Hide Advanced Filters"}
+            </button>
+            <hr className="my-4" />
+          </div>
 
           {showMore === false ? (
             <>
@@ -711,6 +735,7 @@ const SideBar = ({
                   ))}
                 </div>
               </div>
+              <hr className="my-4" />
             </>
           ) : null}
 
