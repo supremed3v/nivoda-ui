@@ -13,17 +13,18 @@ export const Explore = () => {
     setLabGrown,
     labGrown,
     loading,
+    initialDiamondsData,
   } = useNivodaDiamonds();
   // Check if the filtered diamonds is empty
   const [diamondProp, setDiamondProp] = useState([]);
 
   useEffect(() => {
     if (filteredDiamonds === null || clearFilter === true) {
-      setDiamondProp(diamondsData);
+      setDiamondProp(initialDiamondsData);
     } else {
       setDiamondProp(filteredDiamonds);
     }
-  }, [filteredDiamonds, diamondsData, clearFilter]);
+  }, [filteredDiamonds, initialDiamondsData, clearFilter]);
 
   const changeLabGrown = (value) => {
     setLabGrown(value);

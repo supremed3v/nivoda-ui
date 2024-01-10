@@ -12,40 +12,6 @@ import {
 } from "./libs/data";
 import { useNivodaDiamonds } from "../context/ApiContext";
 
-const SortSubmenu = ({ onSortSelected }) => {
-  const handleSortClick = (order) => {
-    onSortSelected(order);
-  };
-
-  return (
-    <div className="origin-top-right absolute z-20 right-0 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-100">
-      <div
-        className="py-1"
-        role="menu"
-        aria-orientation="vertical"
-        aria-labelledby="menu-button"
-      >
-        <a
-          href="#"
-          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          role="menuitem"
-          onClick={() => handleSortClick("ASC")}
-        >
-          Price: Low to High
-        </a>
-        <a
-          href="#"
-          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-          role="menuitem"
-          onClick={() => handleSortClick("DESC")}
-        >
-          Price: High to Low
-        </a>
-      </div>
-    </div>
-  );
-};
-
 export const Filter = () => {
   const {
     setFilteredDiamonds,
@@ -56,23 +22,42 @@ export const Filter = () => {
     setSortOrder,
   } = useNivodaDiamonds();
   const [loading, setLoading] = useState(false);
+  const defaultValues = {
+    selectedShapes: ["ROUND"],
+    selectedColors: ["H", "G", "F", "E", "D"],
+    selectedClarity: ["SI1", "VS2", "VS1", "VVS2", "VVS1", "IF", "FL"],
+    selectedCuts: ["GD", "G", "EX"],
+    dollarFrom: 500,
+    dollarTo: 10000000,
+    diamondSizeFrom: 0.92,
+    diamondSizeTo: 30.0,
+  };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedDeliveryTimes, setSelectedDeliveryTimes] = useState([]);
   const [selectedCertificates, setSelectedCertificates] = useState([]);
-  const [selectedShapes, setSelectedShapes] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedClarity, setSelectedClarity] = useState([]);
-  const [selectedCuts, setSelectedCuts] = useState([]);
+  const [selectedShapes, setSelectedShapes] = useState(
+    defaultValues.selectedShapes
+  );
+  const [selectedColors, setSelectedColors] = useState(
+    defaultValues.selectedColors
+  );
+  const [selectedClarity, setSelectedClarity] = useState(
+    defaultValues.selectedClarity
+  );
+  const [selectedCuts, setSelectedCuts] = useState(defaultValues.selectedCuts);
   const [selectedPolishes, setSelectedPolishes] = useState([]);
   const [selectedSymmetries, setSelectedSymmetries] = useState([]);
   const [selectedFlourescence, setSelectedFlourescence] = useState([]);
   const [anyFilterApplied, setAnyFilterApplied] = useState(false);
-  const [isNaturalSelected, setIsNaturalSelected] = useState(true);
-  const [dollarFrom, setDollarFrom] = useState(0);
-  const [dollarTo, setDollarTo] = useState(10000000);
-  const [diamondSizeFrom, setDiamondSizeFrom] = useState(0);
-  const [diamondSizeTo, setDiamondSizeTo] = useState(1.5);
+  const [dollarFrom, setDollarFrom] = useState(defaultValues.dollarFrom);
+  const [dollarTo, setDollarTo] = useState(defaultValues.dollarTo);
+  const [diamondSizeFrom, setDiamondSizeFrom] = useState(
+    defaultValues.diamondSizeFrom
+  );
+  const [diamondSizeTo, setDiamondSizeTo] = useState(
+    defaultValues.diamondSizeTo
+  );
 
   const onCutSelect = (cut) => {
     setSelectedCuts((prevSelected) =>
@@ -232,6 +217,13 @@ export const Filter = () => {
                                                 .join(", ")}]`
                                             : "[]"
                                         },
+                                        clarity: ${
+                                          selectedClarity.length > 0
+                                            ? `[${selectedClarity
+                                                .map((clarity) => `${clarity}`)
+                                                .join(", ")}]`
+                                            : "[]"
+                                        },
                                         girdle: [],
                                         flouresence: ${
                                           selectedFlourescence.length > 0
@@ -281,7 +273,7 @@ export const Filter = () => {
                                     limit: 50,
                                     order: { type: price, direction: ${
                                       sortOrder === "ASC" ? "ASC" : "DESC"
-                                    } }
+                                    } },
                                 ) {
                                     items {
                                         id
@@ -350,7 +342,23 @@ export const Filter = () => {
       } else {
         setFilteredDiamonds(diamondsData.data.diamonds_by_query.items);
         setLoading(false);
-        setAnyFilterApplied(true);
+        if (
+          selectedClarity ||
+          selectedColors ||
+          selectedCuts ||
+          selectedPolishes ||
+          selectedSymmetries ||
+          selectedFlourescence ||
+          selectedDeliveryTimes ||
+          selectedCertificates ||
+          selectedShapes ||
+          dollarFrom ||
+          dollarTo ||
+          diamondSizeFrom ||
+          diamondSizeTo
+        ) {
+          setAnyFilterApplied(true);
+        }
         toggleSidebar();
       }
     } catch (error) {
@@ -364,14 +372,19 @@ export const Filter = () => {
   const onClearFilters = () => {
     setSelectedCertificates([]);
     setSelectedDeliveryTimes([]);
-    setSelectedShapes([]);
-    setSelectedColors([]);
-    setSelectedClarity([]);
-    setSelectedCuts([]);
+    setSelectedShapes(defaultValues.selectedShapes);
+    setSelectedColors(defaultValues.selectedColors);
+    setSelectedClarity(defaultValues.selectedClarity);
+    setSelectedCuts(defaultValues.selectedCuts);
     setSelectedPolishes([]);
     setSelectedSymmetries([]);
     setSelectedFlourescence([]);
     setAnyFilterApplied(false);
+    setDollarFrom(defaultValues.dollarFrom);
+    setDollarTo(defaultValues.dollarTo);
+    setDiamondSizeFrom(defaultValues.diamondSizeFrom);
+    setDiamondSizeTo(defaultValues.diamondSizeTo);
+    setSelectedCuts;
     toggleSidebar();
     setLabGrown(false);
     setClearFilter(true);
@@ -512,6 +525,7 @@ const SideBar = ({
   setDiamondSizeFrom,
   setDiamondSizeTo,
 }) => {
+  const [showMore, setShowMore] = useState(true);
   return (
     <div
       className={`fixed top-0 left-0 w-[720px] h-full bg-white shadow-lg transform ${
@@ -643,61 +657,62 @@ const SideBar = ({
             ))}
           </div>
 
-          {/* Polish */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Polish</h2>
-            {polishData.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => onPolishSelect(option.polish)}
-                className={`${
-                  selectedPolishes.includes(option.polish)
-                    ? "border-pink-500 text-pink-500"
-                    : "text-black bg-white border-gray-300"
-                } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-              >
-                {option.description}
-              </button>
-            ))}
-          </div>
+          {showMore === false ? (
+            <>
+              <div>
+                <h2 className="text-lg font-bold mb-2">Polish</h2>
+                {polishData.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => onPolishSelect(option.polish)}
+                    className={`${
+                      selectedPolishes.includes(option.polish)
+                        ? "border-pink-500 text-pink-500"
+                        : "text-black bg-white border-gray-300"
+                    } px-4 py-2 m-1 rounded-md border focus:outline-none`}
+                  >
+                    {option.description}
+                  </button>
+                ))}
+              </div>
 
-          {/* Symmetry */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Symmetry</h2>
-            {symmetryData.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => onSymmetrySelect(option.symmetry)}
-                className={`${
-                  selectedSymmetries.includes(option.symmetry)
-                    ? "border-pink-500 text-pink-500"
-                    : "text-black bg-white border-gray-300"
-                } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-              >
-                {option.description}
-              </button>
-            ))}
-          </div>
+              <div>
+                <h2 className="text-lg font-bold mb-2">Symmetry</h2>
+                {symmetryData.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => onSymmetrySelect(option.symmetry)}
+                    className={`${
+                      selectedSymmetries.includes(option.symmetry)
+                        ? "border-pink-500 text-pink-500"
+                        : "text-black bg-white border-gray-300"
+                    } px-4 py-2 m-1 rounded-md border focus:outline-none`}
+                  >
+                    {option.description}
+                  </button>
+                ))}
+              </div>
 
-          {/* Fluorescence */}
-          <div className="col-span-2 mt-4 mb-4">
-            <h2 className="text-lg font-bold mb-2">Fluorescence</h2>
-            <div className="grid grid-cols-6 gap-4">
-              {fluorescenceData.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => onFluorescenceSelect(option.id)}
-                  className={`${
-                    selectedFlourescence.includes(option.id)
-                      ? "border-pink-500 text-pink-500"
-                      : "text-black bg-white border-gray-300"
-                  } px-4 py-1 rounded-md border focus:outline-none text-center`}
-                >
-                  {option.fluorescence}
-                </button>
-              ))}
-            </div>
-          </div>
+              <div className="col-span-2 mt-4 mb-4">
+                <h2 className="text-lg font-bold mb-2">Fluorescence</h2>
+                <div className="grid grid-cols-6 gap-4">
+                  {fluorescenceData.map((option) => (
+                    <button
+                      key={option.id}
+                      onClick={() => onFluorescenceSelect(option.id)}
+                      className={`${
+                        selectedFlourescence.includes(option.id)
+                          ? "border-pink-500 text-pink-500"
+                          : "text-black bg-white border-gray-300"
+                      } px-4 py-1 rounded-md border focus:outline-none text-center`}
+                    >
+                      {option.fluorescence}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : null}
 
           {/* Price */}
 

@@ -15,6 +15,7 @@ export const SingleDiamond = () => {
 
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
+  console.log(data);
 
   React.useEffect(() => {
     const fetchData = async () => {
