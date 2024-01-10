@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   certificateLabData,
   clarityData,
@@ -269,6 +269,7 @@ export const Filter = () => {
                                         },
                                         dollar_value: { from: ${dollarFrom}, to: ${dollarTo}},
                                         dollar_per_carat: null,
+                                        returns: true,
                                     },
                                     offset: 0,
                                     limit: 50,
@@ -370,12 +371,6 @@ export const Filter = () => {
     }
   };
 
-  loading && (
-    <div className="flex justify-center items-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-    </div>
-  );
-
   const [showSort, setShowSort] = useState(false);
 
   const onClearFilters = () => {
@@ -394,7 +389,6 @@ export const Filter = () => {
     setDiamondSizeFrom(defaultValues.diamondSizeFrom);
     setDiamondSizeTo(defaultValues.diamondSizeTo);
     setSelectedCuts;
-    toggleSidebar();
     setLabGrown(false);
     setClearFilter(true);
   };
@@ -529,7 +523,7 @@ const SideBar = ({
   return (
     <div className="w-full  z-50">
       <div className="flex flex-col flex-grow p-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-3 gap-4">
           {/* Delivery Time */}
           <div>
             <h2 className="text-lg font-bold mb-2">Delivery Time</h2>
@@ -569,7 +563,7 @@ const SideBar = ({
           {/* Shapes */}
           <div className="col-span-2 mt-4">
             <h2 className="text-lg font-bold mb-2">Shapes</h2>
-            <div className="grid lg:grid-cols-10 sm:grid-cols-8 gap-4">
+            <div className="grid lg:grid-cols-8 sm:grid-cols-4 gap-4">
               {shapeData.map((shape) => (
                 <button
                   key={shape.id}
@@ -597,7 +591,7 @@ const SideBar = ({
                   onClick={() => onColorSelect(option.color)}
                   className={`${
                     selectedColors.includes(option.color)
-                      ? "border-pink-500 text-pink-500"
+                      ? "border-pink-500 text-pink-500 bg-white"
                       : "text-black bg-white border-gray-300"
                   } px-4 py-2 rounded-md border focus:outline-none`}
                   style={{
@@ -617,7 +611,7 @@ const SideBar = ({
                   onClick={() => onClaritySelect(option.id)}
                   className={`${
                     selectedClarity.includes(option.id)
-                      ? "border-pink-500 text-pink-500"
+                      ? "border-pink-500 text-pink-500 bg-white"
                       : "text-black bg-white border-gray-300"
                   } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                 >
@@ -635,7 +629,7 @@ const SideBar = ({
                   onClick={() => onCutSelect(option.cut)}
                   className={`${
                     selectedCuts.includes(option.cut)
-                      ? "border-pink-500 text-pink-500"
+                      ? "border-pink-500 text-pink-500 bg-white"
                       : "text-black bg-white border-gray-300"
                   } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                 >
@@ -650,17 +644,15 @@ const SideBar = ({
           col-span-4 mt-4 mb-4
           "
           >
-            <hr className="my-4" />
             <h2 className="text-lg font-bold mb-2 text-black">
               Advanced Filters
             </h2>
             <button
               onClick={() => handleShowMore()}
-              className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none"
+              className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none bg-white"
             >
               {showMore ? "Show Advanced Filters" : "Hide Advanced Filters"}
             </button>
-            <hr className="my-4" />
           </div>
 
           {showMore === false ? (
@@ -677,7 +669,7 @@ const SideBar = ({
                     onClick={() => onPolishSelect(option.polish)}
                     className={`${
                       selectedPolishes.includes(option.polish)
-                        ? "border-pink-500 text-pink-500"
+                        ? "border-pink-500 text-pink-500 bg-white"
                         : "text-black bg-white border-gray-300"
                     } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                   >
@@ -694,7 +686,7 @@ const SideBar = ({
                     onClick={() => onSymmetrySelect(option.symmetry)}
                     className={`${
                       selectedSymmetries.includes(option.symmetry)
-                        ? "border-pink-500 text-pink-500"
+                        ? "border-pink-500 text-pink-500 bg-white"
                         : "text-black bg-white border-gray-300"
                     } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                   >
@@ -712,7 +704,7 @@ const SideBar = ({
                       onClick={() => onFluorescenceSelect(option.id)}
                       className={`${
                         selectedFlourescence.includes(option.id)
-                          ? "border-pink-500 text-pink-500"
+                          ? "border-pink-500 text-pink-500 bg-white"
                           : "text-black bg-white border-gray-300"
                       } px-4 py-1 rounded-md border focus:outline-none text-center`}
                     >
@@ -721,74 +713,73 @@ const SideBar = ({
                   ))}
                 </div>
               </div>
-              <hr className="my-4" />
             </>
           ) : null}
         </div>
       </div>
 
-      <div className="border-t-2 pt-3 flex sm:flex-col justify-between flex-col items-between py-2">
-        <div className=" mt-4 mb-4">
-          <h2 className="text-lg font-bold mb-2">Price</h2>
-          <div className="grid grid-cols-8 gap-10">
-            <div className="col-span-4">
-              <label htmlFor="">
-                <span className="text-gray-600 text-center">Min $</span>
-              </label>
-
-              <input
-                type="number"
-                placeholder="Min: (eg: 0)"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black"
-                onChange={(e) => setDollarFrom(e.target.value)}
-                value={dollarFrom}
-              />
-            </div>
-            <div className="col-span-4">
-              <label htmlFor="">
-                <span className="text-gray-600">Max $</span>
-              </label>
-              <input
-                type="number"
-                placeholder="Max: (eg: 100000)"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black"
-                onChange={(e) => setDollarTo(e.target.value)}
-                value={dollarTo}
-              />
+      <div className="border-t-2 pt-3 flex flex-col justify-evenly items-center py-2">
+        <div className="grid grid-cols-4 sm:grid-cols-2 md:grid-cols-4 sm:gap-0 md:gap-10 gap-10">
+          <div className="mt-4 mb-4">
+            <h2 className="text-lg font-bold mb-2">Price</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 gap-4">
+              <div>
+                <label htmlFor="">
+                  <span className="text-gray-600 text-center mr-1">Min $</span>
+                </label>
+                <input
+                  type="number"
+                  placeholder="Min: (eg: 0)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black"
+                  onChange={(e) => setDollarFrom(e.target.value)}
+                  value={dollarFrom}
+                />
+              </div>
+              <div>
+                <label htmlFor="">
+                  <span className="text-gray-600 mr-1">Max $</span>
+                </label>
+                <input
+                  type="number"
+                  placeholder="Max: (eg: 100000)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black mt-2 md:mt-0"
+                  onChange={(e) => setDollarTo(e.target.value)}
+                  value={dollarTo}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Diamond Size */}
-        <div className="mt-4 mb-4">
-          <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
-          <div className="grid grid-cols-8 gap-10">
-            <div className="col-span-4">
-              <label htmlFor="">
-                <span className="text-gray-600 text-center">Min</span>
-              </label>
-
-              <input
-                type="number"
-                step="any"
-                placeholder="0 ct  use . for decimals (eg: 0.5)"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-                onChange={(e) => setDiamondSizeFrom(e.target.value)}
-                value={diamondSizeFrom}
-              />
-            </div>
-            <div className="col-span-4">
-              <label htmlFor="">
-                <span className="text-gray-600">Max</span>
-              </label>
-              <input
-                type="number"
-                step="any"
-                placeholder="0 ct  use . for decimals (eg: 0.5)"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-                onChange={(e) => setDiamondSizeTo(e.target.value)}
-                value={diamondSizeTo}
-              />
+          {/* Diamond Size */}
+          <div className="mt-4 mb-4">
+            <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="">
+                  <span className="text-gray-600 text-center mr-2">Min</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="0 ct  use . for decimals (eg: 0.5)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                  onChange={(e) => setDiamondSizeFrom(e.target.value)}
+                  value={diamondSizeFrom}
+                />
+              </div>
+              <div>
+                <label htmlFor="">
+                  <span className="text-gray-600 mr-1">Max</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="0 ct  use . for decimals (eg: 0.5)"
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none mt-2 md:mt-0"
+                  onChange={(e) => setDiamondSizeTo(e.target.value)}
+                  value={diamondSizeTo}
+                />
+              </div>
             </div>
           </div>
         </div>
