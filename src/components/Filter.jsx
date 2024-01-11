@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   certificateLabData,
   clarityData,
@@ -11,7 +11,8 @@ import {
   symmetryData,
 } from "./libs/data";
 import { useNivodaDiamonds } from "../context/ApiContext";
-
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 export const Filter = () => {
   const {
     setFilteredDiamonds,
@@ -26,12 +27,15 @@ export const Filter = () => {
   const defaultValues = {
     selectedShapes: ["ROUND"],
     selectedColors: ["H", "G", "F", "E", "D"],
-    selectedClarity: ["SI1", "VS2", "VS1", "VVS2", "VVS1", "IF", "FL"],
+    selectedClarity: ["SI1", "VS2", "VS1", "VVS2", "VVS1", "IF"],
     selectedCuts: ["GD", "G", "EX"],
     dollarFrom: 500,
     dollarTo: 10000000,
     diamondSizeFrom: 0.92,
     diamondSizeTo: 30.0,
+    selectedSymmetries: ["EX", "VG", "GD"],
+    selectedPolishes: ["EX", "VG", "G"],
+    selectedFluorescence: ["NON", "FNT", "MED", "STG", "VST"],
   };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -47,9 +51,15 @@ export const Filter = () => {
     defaultValues.selectedClarity
   );
   const [selectedCuts, setSelectedCuts] = useState(defaultValues.selectedCuts);
-  const [selectedPolishes, setSelectedPolishes] = useState([]);
-  const [selectedSymmetries, setSelectedSymmetries] = useState([]);
-  const [selectedFlourescence, setSelectedFlourescence] = useState([]);
+  const [selectedPolishes, setSelectedPolishes] = useState(
+    defaultValues.selectedPolishes
+  );
+  const [selectedSymmetries, setSelectedSymmetries] = useState(
+    defaultValues.selectedSymmetries
+  );
+  const [selectedFlourescence, setSelectedFlourescence] = useState(
+    defaultValues.selectedFluorescence
+  );
   const [anyFilterApplied, setAnyFilterApplied] = useState(false);
   const [dollarFrom, setDollarFrom] = useState(defaultValues.dollarFrom);
   const [dollarTo, setDollarTo] = useState(defaultValues.dollarTo);
@@ -60,70 +70,10 @@ export const Filter = () => {
     defaultValues.diamondSizeTo
   );
 
-  const onCutSelect = (cut) => {
-    setSelectedCuts((prevSelected) =>
-      prevSelected.includes(cut)
-        ? prevSelected.filter((selectedCut) => selectedCut !== cut)
-        : [...prevSelected, cut]
-    );
-  };
-
-  const onPolishSelect = (polish) => {
-    setSelectedPolishes((prevSelected) =>
-      prevSelected.includes(polish)
-        ? prevSelected.filter((selectedPolish) => selectedPolish !== polish)
-        : [...prevSelected, polish]
-    );
-  };
-
-  const onSymmetrySelect = (symmetry) => {
-    setSelectedSymmetries((prevSelected) =>
-      prevSelected.includes(symmetry)
-        ? prevSelected.filter(
-            (selectedSymmetry) => selectedSymmetry !== symmetry
-          )
-        : [...prevSelected, symmetry]
-    );
-  };
-
-  const onColorSelect = (color) => {
-    setSelectedColors((prevSelected) =>
-      prevSelected.includes(color)
-        ? prevSelected.filter((selectedColor) => selectedColor !== color)
-        : [...prevSelected, color]
-    );
-  };
-
-  const onClaritySelect = (clarity) => {
-    setSelectedClarity((prevSelected) =>
-      prevSelected.includes(clarity)
-        ? prevSelected.filter((selectedClarity) => selectedClarity !== clarity)
-        : [...prevSelected, clarity]
-    );
-  };
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     // Disable/enable scroll on body
     document.body.style.overflow = isSidebarOpen ? "auto" : "hidden";
-  };
-
-  const handleDeliveryTimeSelection = (time) => {
-    setSelectedDeliveryTimes((prevSelected) =>
-      prevSelected.includes(time)
-        ? prevSelected.filter((selectedTime) => selectedTime !== time)
-        : [...prevSelected, time]
-    );
-  };
-
-  const handleCertificateSelection = (certificate) => {
-    setSelectedCertificates((prevSelected) =>
-      prevSelected.includes(certificate)
-        ? prevSelected.filter(
-            (selectedCertificate) => selectedCertificate !== certificate
-          )
-        : [...prevSelected, certificate]
-    );
   };
 
   const onShapeSelect = (shape) => {
@@ -133,13 +83,22 @@ export const Filter = () => {
         : [...prevSelected, shape]
     );
   };
-  const onFluorescenceSelect = (fluorescence) => {
-    setSelectedFlourescence((prevSelected) =>
-      prevSelected.includes(fluorescence)
+
+  const onDeliveryTimeSelect = (time) => {
+    setSelectedDeliveryTimes((prevSelected) =>
+      prevSelected.includes(time)
+        ? prevSelected.filter((selectedTime) => selectedTime !== time)
+        : [...prevSelected, time]
+    );
+  };
+
+  const onCertificateSelect = (certificate) => {
+    setSelectedCertificates((prevSelected) =>
+      prevSelected.includes(certificate)
         ? prevSelected.filter(
-            (selectedFlourescence) => selectedFlourescence !== fluorescence
+            (selectedCertificate) => selectedCertificate !== certificate
           )
-        : [...prevSelected, fluorescence]
+        : [...prevSelected, certificate]
     );
   };
 
@@ -372,6 +331,7 @@ export const Filter = () => {
   };
 
   const [showSort, setShowSort] = useState(false);
+  const [showMore, setShowMore] = useState(false);
 
   const onClearFilters = () => {
     setSelectedCertificates([]);
@@ -446,366 +406,480 @@ export const Filter = () => {
             />
           )}
         </div>
-        <SideBar
-          isOpen={isSidebarOpen}
-          onClose={toggleSidebar}
-          selectedDeliveryTimes={selectedDeliveryTimes}
-          selectedCertificates={selectedCertificates}
-          onDeliveryTimeSelect={handleDeliveryTimeSelection}
-          onCertificateSelect={handleCertificateSelection}
-          selectedShapes={selectedShapes}
-          onShapeSelect={onShapeSelect}
-          onColorSelect={onColorSelect}
-          selectedColors={selectedColors}
-          onClaritySelect={onClaritySelect}
-          selectedClarity={selectedClarity}
-          selectedCuts={selectedCuts}
-          onCutSelect={onCutSelect}
-          selectedPolishes={selectedPolishes}
-          onPolishSelect={onPolishSelect}
-          selectedSymmetries={selectedSymmetries}
-          onSymmetrySelect={onSymmetrySelect}
-          handleFiltersApplied={handleFiltersApplied}
-          onClearFilters={onClearFilters}
-          selectedFlourescence={selectedFlourescence}
-          onFluorescenceSelect={onFluorescenceSelect}
-          loading={loading}
-          dollarFrom={dollarFrom}
-          setDollarFrom={setDollarFrom}
-          dollarTo={dollarTo}
-          setDollarTo={setDollarTo}
-          setDiamondSizeFrom={setDiamondSizeFrom}
-          setDiamondSizeTo={setDiamondSizeTo}
-        />
-      </div>
-    </section>
-  );
-};
+        <div className="w-[900px] mx-auto z-50">
+          <div className="flex flex-col flex-grow ">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 py-4">
+              {/* Delivery Time */}
+              <div>
+                <h2 className="text-lg font-bold mb-2">Delivery Time</h2>
+                {deliveryData.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => onDeliveryTimeSelect(option.time)}
+                    className={`${
+                      selectedDeliveryTimes.includes(option.time)
+                        ? "border-pink-500 text-pink-500"
+                        : "text-black bg-white border-gray-300"
+                    } px-4 py-2 m-1 rounded-md border focus:outline-none`}
+                  >
+                    {option.name}
+                  </button>
+                ))}
+              </div>
 
-const SideBar = ({
-  isOpen,
-  onClose,
-  selectedDeliveryTimes,
-  selectedCertificates,
-  selectedShapes,
-  onDeliveryTimeSelect,
-  onCertificateSelect,
-  onShapeSelect,
-  onColorSelect,
-  selectedColors,
-  onClaritySelect,
-  selectedClarity,
-  selectedCuts,
-  onCutSelect,
-  selectedPolishes,
-  onPolishSelect,
-  selectedSymmetries,
-  onSymmetrySelect,
-  handleFiltersApplied,
-  onClearFilters,
-  onFluorescenceSelect,
-  selectedFlourescence,
-  loading,
-  dollarFrom,
-  setDollarFrom,
-  dollarTo,
-  setDollarTo,
-  setDiamondSizeFrom,
-  setDiamondSizeTo,
-  diamondSizeFrom,
-  diamondSizeTo,
-}) => {
-  const [showMore, setShowMore] = useState(true);
-
-  const handleShowMore = () => {
-    setShowMore(!showMore);
-  };
-  return (
-    <div className="w-full  z-50">
-      <div className="flex flex-col flex-grow p-4">
-        <div className="grid grid-cols-3 sm:grid-cols-3 gap-4">
-          {/* Delivery Time */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Delivery Time</h2>
-            {deliveryData.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => onDeliveryTimeSelect(option.time)}
-                className={`${
-                  selectedDeliveryTimes.includes(option.time)
-                    ? "border-pink-500 text-pink-500"
-                    : "text-black bg-white border-gray-300"
-                } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-              >
-                {option.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Certificate Lab */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Certificate Lab</h2>
-            {certificateLabData.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => onCertificateSelect(option.name)}
-                className={`${
-                  selectedCertificates.includes(option.name)
-                    ? "border-pink-500 text-pink-500"
-                    : "text-black bg-white border-gray-300"
-                } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-              >
-                {option.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Shapes */}
-          <div className="col-span-2 mt-4">
-            <h2 className="text-lg font-bold mb-2">Shapes</h2>
-            <div className="grid lg:grid-cols-8 sm:grid-cols-4 gap-4">
-              {shapeData.map((shape) => (
-                <button
-                  key={shape.id}
-                  onClick={() => onShapeSelect(shape.name)}
-                  className={`${
-                    selectedShapes.includes(shape.name)
-                      ? "border-pink-500 text-pink-500"
-                      : "text-black bg-white border-gray-300"
-                  } px-4 py-2 rounded-md border focus:outline-none flex flex-col w-[50px] items-center justify-center`}
-                >
-                  {shape.img}
-                </button>
-              ))}
+              {/* Certificate Lab */}
+              <div>
+                <h2 className="text-lg font-bold mb-2">Certificate Lab</h2>
+                {certificateLabData.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => onCertificateSelect(option.name)}
+                    className={`${
+                      selectedCertificates.includes(option.name)
+                        ? "border-pink-500 text-pink-500"
+                        : "text-black bg-white border-gray-300"
+                    } px-4 py-2 m-1 rounded-md border focus:outline-none`}
+                  >
+                    {option.name}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Colour */}
+            {/* Colour */}
 
-          <div className="flex justify-evenly items-center col-span-4">
-            <div>
-              <h2 className="text-lg font-bold mb-2">Colour</h2>
-              {colorData.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => onColorSelect(option.color)}
-                  className={`${
-                    selectedColors.includes(option.color)
-                      ? "border-pink-500 text-pink-500 bg-white"
-                      : "text-black bg-white border-gray-300"
-                  } px-4 py-2 rounded-md border focus:outline-none`}
-                  style={{
-                    margin: "2px",
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-[100px] ">
+              <div>
+                <h2 className="text-lg font-bold mb-2">Colour</h2>
+                <Slider
+                  range
+                  marks={
+                    colorData.length > 0
+                      ? colorData.reduce((acc, item, index) => {
+                          acc[index + 1] = {
+                            label: item.color,
+                          };
+                          return acc;
+                        }, {})
+                      : {}
+                  }
+                  min={1}
+                  max={colorData.length}
+                  step={1}
+                  defaultValue={
+                    selectedColors.length > 0
+                      ? [
+                          colorData.findIndex(
+                            (item) => item.color === selectedColors[0]
+                          ) + 1,
+                          colorData.findIndex(
+                            (item) =>
+                              item.color ===
+                              selectedColors[selectedColors.length - 1]
+                          ) + 1,
+                        ]
+                      : [1, colorData.length]
+                  }
+                  onChange={(values) => {
+                    const selectedColorIds = Array.from(
+                      { length: values[1] - values[0] + 1 },
+                      (_, index) => values[0] + index
+                    );
+                    setSelectedColors(
+                      selectedColorIds.map(
+                        (id) =>
+                          colorData.find((color) => color.id === id)?.color
+                      )
+                    );
                   }}
-                >
-                  {option.color}
-                </button>
-              ))}
+                  trackStyle={{
+                    backgroundColor: "#ec4899",
+                  }}
+                  handleStyle={{
+                    backgroundColor: "#fff",
+                    borderColor: "#ec4899",
+                    width: "20px",
+                    height: "20px",
+                    marginTop: "-7px",
+                  }}
+                  railStyle={{
+                    backgroundColor: "#d5d5d5",
+                  }}
+                />
+              </div>
+              {/* Clarity */}
+              <div>
+                <h2 className="text-lg font-bold mb-2">Clarity</h2>
+                <Slider
+                  range
+                  marks={
+                    clarityData.length > 0
+                      ? clarityData.reduce((acc, item, index) => {
+                          acc[index + 1] = {
+                            label: item.clarity,
+                          };
+                          return acc;
+                        }, {})
+                      : {}
+                  }
+                  min={1}
+                  max={clarityData.length}
+                  step={1}
+                  defaultValue={
+                    selectedClarity.length > 0
+                      ? [
+                          clarityData.findIndex(
+                            (item) => item.clarity === selectedClarity[0]
+                          ) + 1,
+                          clarityData.findIndex(
+                            (item) =>
+                              item.clarity ===
+                              selectedClarity[selectedClarity.length - 1]
+                          ) + 1,
+                        ]
+                      : [1, clarityData.length]
+                  }
+                  onChange={(values) => {
+                    const selectedClarityIds = Array.from(
+                      { length: values[1] - values[0] + 1 },
+                      (_, index) => values[0] + index
+                    );
+                    setSelectedClarity(
+                      selectedClarityIds.map(
+                        (id) =>
+                          clarityData.find((clarity) => clarity.id === id)
+                            ?.clarity
+                      )
+                    );
+                  }}
+                  trackStyle={[
+                    {
+                      backgroundColor: "#ec4899",
+                    },
+                  ]}
+                  handleStyle={{
+                    backgroundColor: "#fff",
+                    borderColor: "#ec4899",
+                    width: "20px",
+                    height: "20px",
+                    marginTop: "-7px",
+                  }}
+                  railStyle={{
+                    backgroundColor: "#d5d5d5",
+                  }}
+                />
+              </div>
             </div>
-            {/* Clarity */}
-            <div>
-              <h2 className="text-lg font-bold mb-2">Clarity</h2>
-              {clarityData.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => onClaritySelect(option.id)}
-                  className={`${
-                    selectedClarity.includes(option.id)
-                      ? "border-pink-500 text-pink-500 bg-white"
-                      : "text-black bg-white border-gray-300"
-                  } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-                >
-                  {option.clarity}
-                </button>
-              ))}
-            </div>
-
-            {/* Cut */}
-            <div>
-              <h2 className="text-lg font-bold mb-2">Cut</h2>
-              {cutData.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => onCutSelect(option.cut)}
-                  className={`${
-                    selectedCuts.includes(option.cut)
-                      ? "border-pink-500 text-pink-500 bg-white"
-                      : "text-black bg-white border-gray-300"
-                  } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-                >
-                  {option.description}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="
-          col-span-4 mt-4 mb-4
-          "
-          >
-            <h2 className="text-lg font-bold mb-2 text-black">
-              Advanced Filters
-            </h2>
-            <button
-              onClick={() => handleShowMore()}
-              className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none bg-white"
-            >
-              {showMore ? "Show Advanced Filters" : "Hide Advanced Filters"}
-            </button>
-          </div>
-
-          {showMore === false ? (
-            <>
-              <div
-                className="
-          col-span-4 mt-4 mb-4
-          "
-              >
-                <h2 className="text-lg font-bold mb-2">Polish</h2>
-                {polishData.map((option) => (
-                  <button
-                    key={option.id}
-                    onClick={() => onPolishSelect(option.polish)}
-                    className={`${
-                      selectedPolishes.includes(option.polish)
-                        ? "border-pink-500 text-pink-500 bg-white"
-                        : "text-black bg-white border-gray-300"
-                    } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-                  >
-                    {option.description}
-                  </button>
-                ))}
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-[100px] py-10">
+              <div>
+                <h2 className="text-lg font-bold mb-2">Cut</h2>
+                <Slider
+                  range
+                  marks={
+                    cutData.length > 0
+                      ? cutData.reduce((acc, item, index) => {
+                          acc[index + 1] = {
+                            label: item.description,
+                          };
+                          return acc;
+                        }, {})
+                      : {}
+                  }
+                  min={1}
+                  max={cutData.length}
+                  step={1}
+                  defaultValue={
+                    selectedCuts.length > 0
+                      ? [
+                          cutData.findIndex(
+                            (item) => item.cut === selectedCuts[0]
+                          ) + 1,
+                          cutData.findIndex(
+                            (item) =>
+                              item.cut === selectedCuts[selectedCuts.length - 1]
+                          ) + 1,
+                        ]
+                      : [1, cutData.length]
+                  }
+                  onChange={(values) => {
+                    const selectedCutIndices = Array.from(
+                      { length: values[1] - values[0] + 1 },
+                      (_, index) => values[0] + index
+                    );
+                    setSelectedCuts(
+                      selectedCutIndices.map((index) => cutData[index - 1]?.cut)
+                    );
+                  }}
+                  trackStyle={{
+                    backgroundColor: "#ec4899",
+                  }}
+                  handleStyle={{
+                    backgroundColor: "#fff",
+                    borderColor: "#ec4899",
+                    width: "20px",
+                    height: "20px",
+                    marginTop: "-7px",
+                  }}
+                  railStyle={{
+                    backgroundColor: "#d5d5d5",
+                  }}
+                />
               </div>
 
-              <div className="col-span-2 mt-4 mb-4">
-                <h2 className="text-lg font-bold mb-2">Symmetry</h2>
-                {symmetryData.map((option) => (
-                  <button
-                    key={option.id}
-                    onClick={() => onSymmetrySelect(option.symmetry)}
-                    className={`${
-                      selectedSymmetries.includes(option.symmetry)
-                        ? "border-pink-500 text-pink-500 bg-white"
-                        : "text-black bg-white border-gray-300"
-                    } px-4 py-2 m-1 rounded-md border focus:outline-none`}
-                  >
-                    {option.description}
-                  </button>
-                ))}
-              </div>
-
-              <div className="col-span-2 mt-4 mb-4">
-                <h2 className="text-lg font-bold mb-2">Fluorescence</h2>
-                <div className="grid grid-cols-6 gap-4">
-                  {fluorescenceData.map((option) => (
+              <div>
+                <h2 className="text-lg font-bold mb-2">Shape</h2>
+                <div className="flex">
+                  {shapeData.map((shape) => (
                     <button
-                      key={option.id}
-                      onClick={() => onFluorescenceSelect(option.id)}
+                      key={shape.id}
+                      onClick={() => onShapeSelect(shape.name)}
                       className={`${
-                        selectedFlourescence.includes(option.id)
+                        selectedShapes.includes(shape.name)
                           ? "border-pink-500 text-pink-500 bg-white"
                           : "text-black bg-white border-gray-300"
-                      } px-4 py-1 rounded-md border focus:outline-none text-center`}
+                      } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[20px] mr-2  items-center justify-center`}
                     >
-                      {option.fluorescence}
+                      {shape.img}
                     </button>
                   ))}
                 </div>
               </div>
-            </>
-          ) : null}
-        </div>
-      </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-bold mb-2 text-black">
+                Advanced Filters
+              </h2>
+              <button
+                onClick={
+                  showMore === true
+                    ? () => setShowMore(false)
+                    : () => setShowMore(true)
+                }
+                className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none bg-white"
+              >
+                {showMore ? "Show Advanced Filters" : "Hide Advanced Filters"}
+              </button>
+            </div>
 
-      <div className="border-t-2 pt-3 flex flex-col justify-evenly items-center py-2">
-        <div className="grid grid-cols-4 sm:grid-cols-2 md:grid-cols-4 sm:gap-0 md:gap-10 gap-10">
-          <div className="mt-4 mb-4">
-            <h2 className="text-lg font-bold mb-2">Price</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 gap-4">
-              <div>
-                <label htmlFor="">
-                  <span className="text-gray-600 text-center mr-1">Min $</span>
-                </label>
-                <input
-                  type="number"
-                  placeholder="Min: (eg: 0)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black"
-                  onChange={(e) => setDollarFrom(e.target.value)}
-                  value={dollarFrom}
-                />
+            {showMore === true ? (
+              <div className="grid grid-cols-2 gap-[120px]">
+                <div
+                  className="
+          "
+                >
+                  <h2 className="text-lg font-bold mb-2">Polish</h2>
+                  <Slider
+                    range
+                    marks={
+                      polishData.length > 0
+                        ? polishData.reduce((acc, item, index) => {
+                            acc[index + 1] = {
+                              label: item.description,
+                            };
+                            return acc;
+                          }, {})
+                        : {}
+                    }
+                    min={1}
+                    max={polishData.length}
+                    step={1}
+                    defaultValue={
+                      selectedPolishes.length > 0
+                        ? [
+                            polishData.findIndex(
+                              (item) => item.polish === selectedPolishes[0]
+                            ) + 1,
+                            polishData.findIndex(
+                              (item) =>
+                                item.polish ===
+                                selectedPolishes[selectedPolishes.length - 1]
+                            ) + 1,
+                          ]
+                        : [1, polishData.length]
+                    }
+                    onChange={(values) => {
+                      const selectedPolishIndices = Array.from(
+                        { length: values[1] - values[0] + 1 },
+                        (_, index) => values[0] + index
+                      );
+                      setSelectedPolishes(
+                        selectedPolishIndices.map(
+                          (index) =>
+                            polishData.find((item) => item.id === index)?.polish
+                        )
+                      );
+                    }}
+                    trackStyle={{
+                      backgroundColor: "#ec4899",
+                    }}
+                    handleStyle={{
+                      backgroundColor: "#fff",
+                      borderColor: "#ec4899",
+                      width: "20px",
+                      height: "20px",
+                      marginTop: "-7px",
+                    }}
+                    railStyle={{
+                      backgroundColor: "#d5d5d5",
+                    }}
+                  />
+                </div>
+
+                <div className="">
+                  <h2 className="text-lg font-bold mb-2">Symmetry</h2>
+                  <Slider
+                    range
+                    marks={
+                      symmetryData.length > 0
+                        ? symmetryData.reduce((acc, item, index) => {
+                            acc[index + 1] = {
+                              label: item.description,
+                            };
+                            return acc;
+                          }, {})
+                        : {}
+                    }
+                    min={1}
+                    max={symmetryData.length}
+                    step={1}
+                    defaultValue={
+                      selectedSymmetries.length > 0
+                        ? [
+                            symmetryData.findIndex(
+                              (item) => item.symmetry === selectedSymmetries[0]
+                            ) + 1,
+                            symmetryData.findIndex(
+                              (item) =>
+                                item.symmetry ===
+                                selectedSymmetries[
+                                  selectedSymmetries.length - 1
+                                ]
+                            ) + 1,
+                          ]
+                        : [1, symmetryData.length]
+                    }
+                    onChange={(values) => {
+                      const selectedSymmetryIndices = Array.from(
+                        { length: values[1] - values[0] + 1 },
+                        (_, index) => values[0] + index
+                      );
+                      setSelectedSymmetries(
+                        selectedSymmetryIndices.map(
+                          (index) =>
+                            symmetryData.find((item) => item.id === index)
+                              ?.symmetry
+                        )
+                      );
+                    }}
+                    trackStyle={{
+                      backgroundColor: "#ec4899",
+                    }}
+                    handleStyle={{
+                      backgroundColor: "#fff",
+                      borderColor: "#ec4899",
+                      width: "20px",
+                      height: "20px",
+                      marginTop: "-7px",
+                    }}
+                    railStyle={{
+                      backgroundColor: "#d5d5d5",
+                    }}
+                  />
+                </div>
               </div>
-              <div>
-                <label htmlFor="">
-                  <span className="text-gray-600 mr-1">Max $</span>
-                </label>
-                <input
-                  type="number"
-                  placeholder="Max: (eg: 100000)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black mt-2 md:mt-0"
-                  onChange={(e) => setDollarTo(e.target.value)}
-                  value={dollarTo}
-                />
+            ) : null}
+          </div>
+
+          <div className="grid grid-cols-2 gap-[100px] pt-10">
+            <div className="mt-4 mb-4">
+              <h2 className="text-lg font-bold mb-2">Price</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 gap-4">
+                <div>
+                  <label htmlFor="">
+                    <span className="text-gray-600 text-center mr-1">
+                      Min $
+                    </span>
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="Min: (eg: 0)"
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black"
+                    onChange={(e) => setDollarFrom(e.target.value)}
+                    value={dollarFrom}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="">
+                    <span className="text-gray-600 mr-1">Max $</span>
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="Max: (eg: 100000)"
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none text-black mt-2 md:mt-0"
+                    onChange={(e) => setDollarTo(e.target.value)}
+                    value={dollarTo}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Diamond Size */}
+            <div className="mt-4 mb-4">
+              <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="">
+                    <span className="text-gray-600 text-center mr-2">Min</span>
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    placeholder="0 ct  use . for decimals (eg: 0.5)"
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
+                    onChange={(e) => setDiamondSizeFrom(e.target.value)}
+                    value={diamondSizeFrom}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="">
+                    <span className="text-gray-600 mr-1">Max</span>
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    placeholder="0 ct  use . for decimals (eg: 0.5)"
+                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none mt-2 md:mt-0"
+                    onChange={(e) => setDiamondSizeTo(e.target.value)}
+                    value={diamondSizeTo}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Diamond Size */}
-          <div className="mt-4 mb-4">
-            <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="">
-                  <span className="text-gray-600 text-center mr-2">Min</span>
-                </label>
-                <input
-                  type="number"
-                  step="any"
-                  placeholder="0 ct  use . for decimals (eg: 0.5)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none"
-                  onChange={(e) => setDiamondSizeFrom(e.target.value)}
-                  value={diamondSizeFrom}
-                />
-              </div>
-              <div>
-                <label htmlFor="">
-                  <span className="text-gray-600 mr-1">Max</span>
-                </label>
-                <input
-                  type="number"
-                  step="any"
-                  placeholder="0 ct  use . for decimals (eg: 0.5)"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none mt-2 md:mt-0"
-                  onChange={(e) => setDiamondSizeTo(e.target.value)}
-                  value={diamondSizeTo}
-                />
-              </div>
-            </div>
+          <div className="border-t-2 pt-3 bg-gray-50 text-white flex  justify-center items-center py-2">
+            <button
+              onClick={onClearFilters}
+              className="w-20 mb-2 h-full text-black"
+            >
+              Clear
+            </button>
+            <button
+              onClick={onClearFilters}
+              className="w-20 mb-2 h-full text-black"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleFiltersApplied}
+              className="bg-gray-900 w-full p-2 h-full rounded focus:outline-none mb-2"
+              disabled={loading}
+            >
+              {loading ? "Fetching Diamonds..." : "Apply Filters"}
+            </button>
           </div>
         </div>
       </div>
-
-      <div className="border-t-2 pt-3 bg-gray-50 text-white flex  justify-center items-center py-2">
-        <button
-          onClick={onClearFilters}
-          className="w-20 mb-2 h-full text-black"
-        >
-          Clear
-        </button>
-        <button
-          onClick={onClearFilters}
-          className="w-20 mb-2 h-full text-black"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleFiltersApplied}
-          className="bg-gray-900 w-full p-2 h-full rounded focus:outline-none mb-2"
-          disabled={loading}
-        >
-          {loading ? "Fetching Diamonds..." : "Apply Filters"}
-        </button>
-      </div>
-    </div>
+    </section>
   );
 };

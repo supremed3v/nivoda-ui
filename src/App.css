@@ -84,3 +84,10 @@ body {
     font-size: 17px;
   }
 }
+
+.rc-slider-mark-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-top: 10px;
+}

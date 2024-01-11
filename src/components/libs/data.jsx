@@ -315,8 +315,8 @@ export const polishData = [
 
 // Symmetry Data
 export const symmetryData = [
-  { id: 1, symmetry: "P", description: "Poor - correct" },
-  { id: 2, symmetry: "F", description: "Fair - correct" },
+  { id: 1, symmetry: "P", description: "Poor" },
+  { id: 2, symmetry: "F", description: "Fair" },
   { id: 3, symmetry: "GD", description: "Good" },
   { id: 4, symmetry: "VG", description: "Very Good" },
   { id: 5, symmetry: "EX", description: "Excellent" },
@@ -330,15 +330,14 @@ export const eyeCleanData = [
 ];
 
 export const clarityData = [
-  { id: "FL", clarity: "FL" },
-  { id: "IF", clarity: "IF" },
-  { id: "VVS1", clarity: "VVS1" },
-  { id: "VVS2", clarity: "VVS2" },
-  { id: "VS1", clarity: "VS1" },
-  { id: "VS2", clarity: "VS2" },
-  { id: "SI1", clarity: "SI1" },
-  { id: "SI2", clarity: "SI2" },
-  { id: "I1", clarity: "I1" },
+  { id: 1, clarity: "FL" },
+  { id: 2, clarity: "IF" },
+  { id: 3, clarity: "VVS1" },
+  { id: 4, clarity: "VVS2" },
+  { id: 5, clarity: "VS1" },
+  { id: 6, clarity: "VS2" },
+  { id: 7, clarity: "SI1" },
+  { id: 8, clarity: "SI2" },
 ];
 
 // Fluorescence Data
