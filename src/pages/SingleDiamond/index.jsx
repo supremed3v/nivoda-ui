@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ContentSkeleton } from "../../components/libs/skeleton";
 import Accordion from "../../components/libs/Accordion";
 import { useCartContext } from "../../context/CartContext";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from "react-responsive-carousel";
 
 export const SingleDiamond = () => {
   const { addToCart } = useCartContext();
@@ -121,6 +123,9 @@ export const SingleDiamond = () => {
                           pavAngle
                          }
                          mine_of_origin
+                         v360 {
+                          url
+                         }
                       price
                     }
                   }
@@ -165,11 +170,39 @@ export const SingleDiamond = () => {
             className="lg:w-4/5 mx-auto flex flex-wrap"
             variants={containerVariants}
           >
-            <img
-              alt="ecommerce"
-              className="lg:w-1/2 w-full lg:h-[100%] h-44 object-contain object-center rounded"
-              src={data?.image}
-            />
+            <Carousel
+              showThumbs={false}
+              showStatus={false}
+              showIndicators={false}
+              stopOnHover={false}
+              swipeable={true}
+              emulateTouch={true}
+              dynamicHeight={true}
+              useKeyboardArrows={true}
+              className="lg:w-1/2 w-full lg:h-[100%] h-44 object-center rounded relative overflow-hidden"
+            >
+              <img
+                alt="ecommerce"
+                className="w-full h-[100%] object-contain rounded"
+                src={data?.image}
+              />
+              <div
+                className="
+              absolute top-0 left-0 w-full h-full object-fill object-center rounded
+              "
+              >
+                <iframe
+                  src={data?.video}
+                  title="video"
+                  allowFullScreen
+                  className="absolute top-0 left-0 w-full h-full object-fill object-center rounded"
+                  width={200}
+                  height={200}
+                  style={{ border: "none" }} // Remove border if any
+                ></iframe>
+              </div>
+            </Carousel>
+
             <div className="lg:w-1/2 w-full lg:pl-10  mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
                 {data?.supplier?.name}

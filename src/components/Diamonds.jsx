@@ -5,6 +5,9 @@ import { CardsSkeleton } from "./libs/skeleton";
 import previewImage from "../assets/nopreview.jpg";
 import { useNivodaDiamonds } from "../context/ApiContext";
 
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from "react-responsive-carousel";
+
 const DiamondCard = ({ diamond }) => {
   const { labGrown } = useNivodaDiamonds();
   return (
@@ -21,11 +24,10 @@ const DiamondCard = ({ diamond }) => {
         to={`/diamond/${diamond.id}`}
         className="block relative h-60 rounded overflow-hidden"
       >
-        <img
-          alt="Diamond"
-          className="object-cover object-center w-full h-full block"
-          src={diamond.image || previewImage}
-        />
+        <iframe
+          src={diamond.video}
+          className="object-cover object-center w-60 h-60 block"
+        ></iframe>
       </Link>
       <div className="mt-4">
         <h2 className="text-gray-700 title-font text-lg font-medium">
@@ -86,7 +88,11 @@ export default function Diamonds({ diamondsData, setLimit }) {
         <div className="flex flex-wrap -m-4">
           {setLimit
             ? limitedDiamondsData.map((diamond) => (
-                <DiamondCard key={diamond.id} diamond={diamond} />
+                <DiamondCard
+                  key={diamond.id}
+                  diamond={diamond}
+                  v360={diamond.v360.url}
+                />
               ))
             : diamondsData.map((diamond) => (
                 <DiamondCard key={diamond.id} diamond={diamond} />

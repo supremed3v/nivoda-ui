@@ -124,6 +124,9 @@ export const NivodaDiamondsProvider = ({ children }) => {
                                           depthPercentage
                                           table
                                          }
+                                         v360 {
+                                          url
+                                         }
                                     price
                                     }
                                     total_count
@@ -140,8 +143,12 @@ export const NivodaDiamondsProvider = ({ children }) => {
           setLoading(false);
           console.error("Nivoda Diamonds Query Error:", diamondsData.error);
         } else {
-          // Set diamondsData in state or perform other actions as needed
-          setDiamondsData(diamondsData.data.diamonds_by_query.items);
+          const filteredDiamonds =
+            diamondsData.data.diamonds_by_query.items.filter(
+              (item) => item.image !== null && item.v360 !== null
+            );
+          console.log(filteredDiamonds);
+          setDiamondsData(filteredDiamonds);
           setLoading(false);
         }
       } catch (error) {
@@ -285,7 +292,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
           // Set diamondsData in state or perform other actions as needed
           const filteredDiamonds =
             diamondsData.data.diamonds_by_query.items.filter(
-              (item) => item.image !== null
+              (item) => item.image !== null && item.v360 !== null
             );
           setInitialDiamondsData(filteredDiamonds);
           setLoading(false);

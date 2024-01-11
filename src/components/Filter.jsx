@@ -657,7 +657,7 @@ export const Filter = () => {
                 }
                 className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none bg-white"
               >
-                {showMore ? "Show Advanced Filters" : "Hide Advanced Filters"}
+                {showMore ? "Hide Advanced Filters" : "Show Advanced Filters"}
               </button>
             </div>
 
