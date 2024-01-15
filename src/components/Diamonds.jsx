@@ -49,7 +49,7 @@ const DiamondCard = ({ diamond }) => {
         <img
           src={diamond.image}
           alt="diamond"
-          className="w-full h-full  object-cover"
+          className="w-full h-full object-contain"
         />
         <button
           className="absolute top-0 right-0 bg-gray-900 text-white rounded-full p-2 m-2 cursor-pointer focus:outline-none"
