@@ -173,31 +173,30 @@ export const SingleDiamond = () => {
             <Carousel
               showThumbs={false}
               showStatus={false}
-              showIndicators={false}
+              showIndicators={true}
               stopOnHover={false}
               swipeable={true}
               emulateTouch={true}
               dynamicHeight={true}
               useKeyboardArrows={true}
-              className="lg:w-1/2 w-full lg:h-[100%] h-44 object-center rounded relative overflow-hidden"
+              className="lg:w-1/2 w-[500px] lg:h-[100%] h-full object-center rounded relative"
+              showArrows={true}
             >
               <img
                 alt="ecommerce"
-                className="w-full h-[100%] object-contain rounded"
+                className="w-full h-[556px] object-cover rounded"
                 src={data?.image}
               />
               <div
                 className="
-              absolute top-0 left-0 w-full h-full object-fill object-center rounded
+              absolute top-0 left-0 w-full h-[556px] object-fill object-center rounded
               "
               >
                 <iframe
                   src={data?.video}
                   title="video"
                   allowFullScreen
-                  className="absolute top-0 left-0 w-full h-full object-fill object-center rounded"
-                  width={200}
-                  height={200}
+                  className="w-full h-full"
                   style={{ border: "none" }} // Remove border if any
                 ></iframe>
               </div>

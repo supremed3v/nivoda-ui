@@ -145,7 +145,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
         } else {
           const filteredDiamonds =
             diamondsData.data.diamonds_by_query.items.filter(
-              (item) => item.image !== null && item.v360 !== null
+              (item) => item.image !== null && item.video !== null
             );
           console.log(filteredDiamonds);
           setDiamondsData(filteredDiamonds);
@@ -292,7 +292,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
           // Set diamondsData in state or perform other actions as needed
           const filteredDiamonds =
             diamondsData.data.diamonds_by_query.items.filter(
-              (item) => item.image !== null && item.v360 !== null
+              (item) => item.image !== null && item.video !== null
             );
           setInitialDiamondsData(filteredDiamonds);
           setLoading(false);

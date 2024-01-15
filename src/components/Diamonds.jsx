@@ -13,7 +13,7 @@ const DiamondCard = ({ diamond }) => {
   return (
     <motion.div
       key={diamond.id}
-      className="lg:w-1/4 md:w-1/2 p-6 w-full
+      className="lg:w-1/3 md:w-1/2 p-6 w-full
         hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out
       "
       initial={{ opacity: 0, y: 20 }}
@@ -22,13 +22,17 @@ const DiamondCard = ({ diamond }) => {
     >
       <Link
         to={`/diamond/${diamond.id}`}
-        className="block relative h-60 rounded overflow-hidden"
+        className="block relative h-[500px] rounded w-[500px] object-contain"
+        style={{ width: "100%" }}
       >
         <iframe
           src={diamond.video}
-          className="object-cover object-center w-60 h-60 block"
+          className="w-full h-full"
+          title="diamond video"
+          style={{ border: "0" }}
         ></iframe>
       </Link>
+
       <div className="mt-4">
         <h2 className="text-gray-700 title-font text-lg font-medium">
           {diamond.certificate.shape} {diamond.certificate.carats}ct{" "}
@@ -102,7 +106,7 @@ export default function Diamonds({ diamondsData, setLimit }) {
 
       {diamondsData !== null && diamondsData.length === 0 ? (
         <div className="flex flex-wrap -m-4">
-          <div className="lg:w-1/4 md:w-1/2 p-6 w-full">
+          <div className="lg:w-1/6 md:w-1/2 p-6 w-full">
             <h2 className="text-gray-700 title-font text-lg font-medium">
               No Diamonds Found
             </h2>
