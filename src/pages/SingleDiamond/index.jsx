@@ -189,7 +189,7 @@ export const SingleDiamond = () => {
               />
               <div
                 className="
-              absolute top-0 left-0 w-full h-[556px] object-fill object-center rounded
+              absolute top-0 left-0 w-[600px] h-[556px] object-center rounded
               "
               >
                 <iframe

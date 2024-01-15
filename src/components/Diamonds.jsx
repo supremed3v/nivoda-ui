@@ -2,55 +2,83 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { CardsSkeleton } from "./libs/skeleton";
-import previewImage from "../assets/nopreview.jpg";
+import { IoMdCloseCircle } from "react-icons/io";
+
 import { useNivodaDiamonds } from "../context/ApiContext";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import Modal from "react-modal";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    width: "550px",
+    height: "550px",
+  },
+};
+
 const DiamondCard = ({ diamond }) => {
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
   const { labGrown } = useNivodaDiamonds();
   const [isHovered, setIsHovered] = React.useState(false);
   return (
     <motion.div
       key={diamond.id}
-      className="lg:w-1/3 md:w-1/2 p-6 w-full
+      className="lg:w-1/4 md:w-1/2 p-6 w-full
         hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out
       "
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1 }}
     >
-      <Link
-        to={`/diamond/${diamond.id}`}
-        className="block relative h-[500px] rounded w-[500px] object-contain"
+      <div
+        className="block relative h-[300px] rounded w-[500px] object-cover object-center"
         style={{ width: "100%" }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         <img
           src={diamond.image}
           alt="diamond"
-          className="w-full h-full"
-          style={{
-            border: "0",
-            opacity: isHovered ? 0 : 1,
-            transition: "opacity 0.3s ease-in-out object-contain",
-            position: "absolute",
-          }}
+          className="w-full h-full  object-cover"
         />
-        <iframe
-          src={diamond.video}
-          className="w-full h-full"
-          title="diamond video"
-          style={{
-            border: "0",
-            opacity: isHovered ? 1 : 0,
-            transition: "opacity 0.3s ease-in-out",
-            position: "absolute",
-          }}
-        ></iframe>
-      </Link>
+        <button
+          className="absolute top-0 right-0 bg-gray-900 text-white rounded-full p-2 m-2 cursor-pointer focus:outline-none"
+          onClick={openModal}
+        >
+          <span className="">
+            <FaMagnifyingGlass size={20} color="white" />
+          </span>
+        </button>
+
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setIsOpen(false)}
+          style={customStyles}
+        >
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-0 right-0 bg-gray-900 text-white rounded-full p-2 m-2 cursor-pointer focus:outline-none"
+          >
+            <IoMdCloseCircle size={20} color="white" />
+          </button>
+          <iframe
+            src={diamond.video}
+            width="100%"
+            height="100%"
+            allowfullscreen
+          ></iframe>
+        </Modal>
+      </div>
 
       <div className="mt-4">
         <h2 className="text-gray-700 title-font text-lg font-medium">
