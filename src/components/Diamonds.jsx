@@ -10,6 +10,7 @@ import { Carousel } from "react-responsive-carousel";
 
 const DiamondCard = ({ diamond }) => {
   const { labGrown } = useNivodaDiamonds();
+  const [isHovered, setIsHovered] = React.useState(false);
   return (
     <motion.div
       key={diamond.id}
@@ -24,12 +25,30 @@ const DiamondCard = ({ diamond }) => {
         to={`/diamond/${diamond.id}`}
         className="block relative h-[500px] rounded w-[500px] object-contain"
         style={{ width: "100%" }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
+        <img
+          src={diamond.image}
+          alt="diamond"
+          className="w-full h-full"
+          style={{
+            border: "0",
+            opacity: isHovered ? 0 : 1,
+            transition: "opacity 0.3s ease-in-out object-contain",
+            position: "absolute",
+          }}
+        />
         <iframe
           src={diamond.video}
           className="w-full h-full"
           title="diamond video"
-          style={{ border: "0" }}
+          style={{
+            border: "0",
+            opacity: isHovered ? 1 : 0,
+            transition: "opacity 0.3s ease-in-out",
+            position: "absolute",
+          }}
         ></iframe>
       </Link>
 
