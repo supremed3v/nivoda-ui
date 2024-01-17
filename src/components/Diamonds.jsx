@@ -5,7 +5,7 @@ import { CardsSkeleton } from "./libs/skeleton";
 import { IoMdCloseCircle } from "react-icons/io";
 
 import { useNivodaDiamonds } from "../context/ApiContext";
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import { Tb360View } from "react-icons/tb";
 import Modal from "react-modal";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
@@ -56,7 +56,7 @@ const DiamondCard = ({ diamond }) => {
           onClick={openModal}
         >
           <span className="">
-            <FaMagnifyingGlass size={20} color="white" />
+            <Tb360View size={20} color="white" />
           </span>
         </button>
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-const Accordion = ({ title, details }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Accordion = ({ title, details, defaultOpen = false }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);

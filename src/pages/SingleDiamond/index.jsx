@@ -6,6 +6,8 @@ import Accordion from "../../components/libs/Accordion";
 import { useCartContext } from "../../context/CartContext";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
+// eslint-disable-next-line no-unused-vars
+import thumb from "../../assets/360-thumb.jpg";
 
 export const SingleDiamond = () => {
   const { addToCart } = useCartContext();
@@ -13,6 +15,20 @@ export const SingleDiamond = () => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
+  };
+
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  const goToNextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % 2); // Assuming there are only two slides (image and video)
+  };
+
+  const goToPrevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + 2) % 2);
   };
 
   const [data, setData] = React.useState(null);
@@ -170,37 +186,58 @@ export const SingleDiamond = () => {
             className="lg:w-4/5 mx-auto flex flex-wrap"
             variants={containerVariants}
           >
-            <Carousel
-              showThumbs={false}
-              showStatus={false}
-              showIndicators={true}
-              stopOnHover={false}
-              swipeable={true}
-              emulateTouch={true}
-              dynamicHeight={true}
-              useKeyboardArrows={true}
-              className="lg:w-1/2 w-[500px] lg:h-[100%] h-full object-center rounded relative"
-              showArrows={true}
-            >
-              <img
-                alt="ecommerce"
-                className="w-full h-[556px] object-cover rounded"
-                src={data?.image}
-              />
-              <div
-                className="
-              absolute top-0 left-0 w-[600px] h-[556px] object-center rounded
-              "
+            <div className="flex flex-col lg:w-1/2 w-full lg:h-[100%] h-full object-center rounded relative">
+              <Carousel
+                selectedItem={currentSlide}
+                onChange={goToSlide}
+                showStatus={false}
+                showIndicators={true}
+                stopOnHover={false}
+                swipeable={true}
+                emulateTouch={true}
+                dynamicHeight={true}
+                useKeyboardArrows={true}
+                className="w-full h-full object-cover rounded relative"
+                showArrows={true}
+                showThumbs={false}
               >
-                <iframe
-                  src={data?.video}
-                  title="video"
-                  allowFullScreen
-                  className="w-full h-full"
-                  style={{ border: "none" }} // Remove border if any
-                ></iframe>
+                <img
+                  alt="ecommerce"
+                  className="w-full h-[500px] object-cover rounded"
+                  src={data?.image}
+                />
+                <div className="absolute top-0 left-0 w-[600px] h-[500px] object-center rounded">
+                  <iframe
+                    src={data?.video}
+                    title="video"
+                    allowFullScreen
+                    className="w-full h-full object-cover rounded"
+                    style={{ border: "none" }} // Remove border if any
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </Carousel>
+
+              {/* Thumbnails */}
+              <div className="flex justify-center mt-4">
+                <img
+                  src={data?.image}
+                  alt="Thumbnail Image"
+                  className={`thumbnail ${
+                    currentSlide === 0 ? "border-2 border-black" : ""
+                  } w-16 h-16 cursor-pointer`}
+                  onClick={() => goToSlide(0)}
+                />
+                <img
+                  src={thumb}
+                  alt="Thumbnail Video"
+                  className={`thumbnail ${
+                    currentSlide === 1 ? "border-2 border-black" : ""
+                  } w-16 h-16 cursor-pointer ml-2`}
+                  onClick={() => goToSlide(1)}
+                />
               </div>
-            </Carousel>
+            </div>
 
             <div className="lg:w-1/2 w-full lg:pl-10  mt-6 lg:mt-0">
               <h2 className="text-sm title-font text-gray-500 tracking-widest">
@@ -262,6 +299,7 @@ export const SingleDiamond = () => {
                     { label: "Symmetry", value: data?.certificate.symmetry },
                     { label: "Fluorescence", value: data?.certificate.floInt },
                   ]}
+                  defaultOpen={true}
                 />
 
                 {/* Measurements */}
