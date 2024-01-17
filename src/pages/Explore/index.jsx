@@ -36,9 +36,9 @@ export const Explore = () => {
         <button
           className={`${
             !labGrown && !loading
-              ? "border-pink-500 border-2 border-spacing-6 text-pink-500"
-              : "text-black bg-white border-gray-300"
-          } px-4 py-2 m-1 rounded-md border-2 focus:outline-none`}
+              ? "border-blue-400 border-2 border-spacing-6 text-black"
+              : "text-black bg-white border-gray-300 border-r-0"
+          } px-4 py-2 my-1 border-2 focus:outline-none border-r-2`}
           onClick={() => changeLabGrown(false)}
         >
           Natural
@@ -46,9 +46,9 @@ export const Explore = () => {
         <button
           className={`${
             labGrown && !loading
-              ? "border-pink-500 border-2 border-spacing-6 text-pink-500"
-              : "text-black bg-white border-gray-300"
-          } px-4 py-2 m-1 rounded-md border-2 focus:outline-none`}
+              ? "border-blue-400 border-2 border-spacing-6 text-black"
+              : "text-black bg-white border-gray-300 border-l-0"
+          } px-4 py-2 my-1 border-2 focus:outline-none border-l-2`}
           onClick={() => changeLabGrown(true)}
         >
           Lab Grown

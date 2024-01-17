@@ -418,7 +418,7 @@ export const Filter = () => {
                     onClick={() => onDeliveryTimeSelect(option.time)}
                     className={`${
                       selectedDeliveryTimes.includes(option.time)
-                        ? "border-pink-500 text-pink-500"
+                        ? "border-blue-400 text-black"
                         : "text-black bg-white border-gray-300"
                     } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                   >
@@ -436,7 +436,7 @@ export const Filter = () => {
                     onClick={() => onCertificateSelect(option.name)}
                     className={`${
                       selectedCertificates.includes(option.name)
-                        ? "border-pink-500 text-pink-500"
+                        ? "border-blue-400 text-black"
                         : "text-black bg-white border-gray-300"
                     } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                   >
@@ -493,11 +493,11 @@ export const Filter = () => {
                     );
                   }}
                   trackStyle={{
-                    backgroundColor: "#ec4899",
+                    backgroundColor: "#000000",
                   }}
                   handleStyle={{
                     backgroundColor: "#fff",
-                    borderColor: "#ec4899",
+                    borderColor: "#000000",
                     width: "20px",
                     height: "20px",
                     marginTop: "-7px",
@@ -554,12 +554,12 @@ export const Filter = () => {
                   }}
                   trackStyle={[
                     {
-                      backgroundColor: "#ec4899",
+                      backgroundColor: "#000000",
                     },
                   ]}
                   handleStyle={{
                     backgroundColor: "#fff",
-                    borderColor: "#ec4899",
+                    borderColor: "#000000",
                     width: "20px",
                     height: "20px",
                     marginTop: "-7px",
@@ -611,11 +611,11 @@ export const Filter = () => {
                     );
                   }}
                   trackStyle={{
-                    backgroundColor: "#ec4899",
+                    backgroundColor: "#000000",
                   }}
                   handleStyle={{
                     backgroundColor: "#fff",
-                    borderColor: "#ec4899",
+                    borderColor: "#000000",
                     width: "20px",
                     height: "20px",
                     marginTop: "-7px",
@@ -635,7 +635,7 @@ export const Filter = () => {
                       onClick={() => onShapeSelect(shape.name)}
                       className={`${
                         selectedShapes.includes(shape.name)
-                          ? "border-pink-500 text-pink-500 bg-white"
+                          ? "border-blue-400 text-black bg-white"
                           : "text-black bg-white border-gray-300"
                       } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[20px] mr-2  items-center justify-center`}
                     >
@@ -655,7 +655,7 @@ export const Filter = () => {
                     ? () => setShowMore(false)
                     : () => setShowMore(true)
                 }
-                className="border-pink-400 border-2 text-pink-500 px-4 mt-6 py-2 rounded-md focus:outline-none bg-white"
+                className="border-blue-400 border-2 text-black px-4 mt-6 py-2 rounded-md focus:outline-none bg-white"
               >
                 {showMore ? "Hide Advanced Filters" : "Show Advanced Filters"}
               </button>
@@ -710,11 +710,11 @@ export const Filter = () => {
                       );
                     }}
                     trackStyle={{
-                      backgroundColor: "#ec4899",
+                      backgroundColor: "#000",
                     }}
                     handleStyle={{
                       backgroundColor: "#fff",
-                      borderColor: "#ec4899",
+                      borderColor: "#000",
                       width: "20px",
                       height: "20px",
                       marginTop: "-7px",
@@ -772,11 +772,11 @@ export const Filter = () => {
                       );
                     }}
                     trackStyle={{
-                      backgroundColor: "#ec4899",
+                      backgroundColor: "#000",
                     }}
                     handleStyle={{
                       backgroundColor: "#fff",
-                      borderColor: "#ec4899",
+                      borderColor: "#000",
                       width: "20px",
                       height: "20px",
                       marginTop: "-7px",
