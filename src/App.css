@@ -91,3 +91,13 @@ body {
   color: #000;
   margin-top: 10px;
 }
+
+.rc-slider-dot-active {
+  border-color: gray !important;
+}
+
+@media (max-width: 1024px) {
+  .rc-slider {
+    width: 50%;
+  }
+}

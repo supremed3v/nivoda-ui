@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ReadMoreSvg from "../assets/readmore.svg";
 
 export const AboutSection = () => {
   return (
@@ -25,10 +26,10 @@ export const AboutSection = () => {
           transition={{ type: "ease", duration: 2 }}
           className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start px-20 md:text-left mb-16 md:mb-0 items-center text-center"
         >
-          <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium py-10 text-white">
+          <h1 className="title-font sm:text-3xl text-4xl mb-4 font-medium py-10 text-white">
             Jewellers
           </h1>
-          <p className="mb-8 leading-relaxed text-2xl text-white">
+          <p className="mb-8 leading-relaxed text-lg text-white">
             We specialize in ideal cut diamonds. GIA, EGL or AGS certified
             directly imported from Belgium, Russia, and Israel. Brighten up your
             life with Marx Jewelers and live with the sparkle of precious gems
@@ -44,9 +45,10 @@ export const AboutSection = () => {
           <div className="flex w-full md:justify-start justify-center items-center">
             <Link
               to={"/explore"}
-              className="inline-flex bg-white text-black border-0 py-2 px-6 focus:outline-none hover:bg-gray-100 rounded-lg text-lg"
+              className="inline-flex bg-white font-semibold gap-2 items-center text-black border-0 py-2 px-6 focus:outline-none hover:bg-gray-100 rounded-sm text-sm"
             >
               Read More
+              <img src={ReadMoreSvg} alt="" srcset="" width={20} height={20} />
             </Link>
           </div>
         </motion.div>

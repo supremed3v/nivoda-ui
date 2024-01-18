@@ -298,7 +298,7 @@ export const colorData = [
 
 // Cut Data
 export const cutData = [
-  { id: 1, cut: "FR", description: "Fair - old" },
+  { id: 1, cut: "FR", description: "Fair" },
   { id: 2, cut: "GD", description: "Good" },
   { id: 3, cut: "G", description: "Very Good" },
   { id: 4, cut: "EX", description: "Excellent" },
@@ -306,8 +306,8 @@ export const cutData = [
 
 // Polish Data
 export const polishData = [
-  { id: 1, polish: "P", description: "Poor - correct" },
-  { id: 2, polish: "F", description: "Fair - correct" },
+  { id: 1, polish: "P", description: "Poor" },
+  { id: 2, polish: "F", description: "Fair" },
   { id: 3, polish: "G", description: "Good" },
   { id: 4, polish: "VG", description: "Very Good" },
   { id: 5, polish: "EX", description: "Excellent" },

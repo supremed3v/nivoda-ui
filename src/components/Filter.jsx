@@ -13,6 +13,8 @@ import {
 import { useNivodaDiamonds } from "../context/ApiContext";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import FilterSvg from "../assets/filter.svg";
+import HideFilter from "../assets/hidefilter.svg";
 export const Filter = () => {
   const {
     setFilteredDiamonds,
@@ -357,6 +359,17 @@ export const Filter = () => {
     setShowSort(!showSort);
   };
 
+  function handleResize() {
+    const pageWidth = window.innerWidth;
+    console.log(`Page Width: ${pageWidth}px`);
+  }
+
+  // Initial call to set the initial width
+  handleResize();
+
+  // Listen for the resize event
+  const size = window.addEventListener("resize", handleResize);
+
   return (
     <section className="text-gray-400 body-font  bg-slate-100">
       <div className="container px-5 py-2 mx-auto">
@@ -365,7 +378,7 @@ export const Filter = () => {
             type="button"
             className="ml-2 px-4 py-3 rounded-md text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
             style={{
-              backgroundColor: "rgb(45, 60, 92)",
+              backgroundColor: "#000",
             }}
             onClick={() => toggleSort()}
           >
@@ -406,19 +419,21 @@ export const Filter = () => {
             />
           )}
         </div>
-        <div className="w-[900px] mx-auto z-50">
-          <div className="flex flex-col flex-grow ">
-            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 py-4">
+        <div className="w-[900px] mx-auto z-50 mt-4">
+          <div className="flex flex-col flex-grow">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 py-4 md:py-0">
               {/* Delivery Time */}
               <div>
-                <h2 className="text-lg font-bold mb-2">Delivery Time</h2>
+                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+                  Delivery Time
+                </h2>
                 {deliveryData.map((option) => (
                   <button
                     key={option.id}
                     onClick={() => onDeliveryTimeSelect(option.time)}
                     className={`${
                       selectedDeliveryTimes.includes(option.time)
-                        ? "border-blue-400 text-black"
+                        ? "border-black text-black"
                         : "text-black bg-white border-gray-300"
                     } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                   >
@@ -429,14 +444,16 @@ export const Filter = () => {
 
               {/* Certificate Lab */}
               <div>
-                <h2 className="text-lg font-bold mb-2">Certificate Lab</h2>
+                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+                  Certificate Lab
+                </h2>
                 {certificateLabData.map((option) => (
                   <button
                     key={option.id}
                     onClick={() => onCertificateSelect(option.name)}
-                    className={`${
+                    className={` md:text-sm ${
                       selectedCertificates.includes(option.name)
-                        ? "border-blue-400 text-black"
+                        ? "border-black text-black"
                         : "text-black bg-white border-gray-300"
                     } px-4 py-2 m-1 rounded-md border focus:outline-none`}
                   >
@@ -448,9 +465,11 @@ export const Filter = () => {
 
             {/* Colour */}
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 gap-[100px] ">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-[100px] md:gap-10">
               <div>
-                <h2 className="text-lg font-bold mb-2">Colour</h2>
+                <h2 className="text-base uppercase md:text-sm font-semibold my-2 text-black">
+                  Colour
+                </h2>
                 <Slider
                   range
                   marks={
@@ -505,11 +524,14 @@ export const Filter = () => {
                   railStyle={{
                     backgroundColor: "#d5d5d5",
                   }}
+                  style={{ width: "300px" }}
                 />
               </div>
               {/* Clarity */}
               <div>
-                <h2 className="text-lg font-bold mb-2">Clarity</h2>
+                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+                  Clarity
+                </h2>
                 <Slider
                   range
                   marks={
@@ -567,12 +589,15 @@ export const Filter = () => {
                   railStyle={{
                     backgroundColor: "#d5d5d5",
                   }}
+                  style={{ width: "300px" }}
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 gap-[100px] py-10">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-[40px] pt-10 ">
               <div>
-                <h2 className="text-lg font-bold mb-2">Cut</h2>
+                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+                  Cut
+                </h2>
                 <Slider
                   range
                   marks={
@@ -623,19 +648,24 @@ export const Filter = () => {
                   railStyle={{
                     backgroundColor: "#d5d5d5",
                   }}
+                  style={{
+                    width: "300px",
+                  }}
                 />
               </div>
 
               <div>
-                <h2 className="text-lg font-bold mb-2">Shape</h2>
-                <div className="flex">
+                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+                  Shape
+                </h2>
+                <div className="flex flex-wrap">
                   {shapeData.map((shape) => (
                     <button
                       key={shape.id}
                       onClick={() => onShapeSelect(shape.name)}
                       className={`${
                         selectedShapes.includes(shape.name)
-                          ? "border-blue-400 text-black bg-white"
+                          ? "border-black text-black bg-white"
                           : "text-black bg-white border-gray-300"
                       } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[20px] mr-2  items-center justify-center`}
                     >
@@ -646,7 +676,7 @@ export const Filter = () => {
               </div>
             </div>
             <div>
-              <h2 className="text-lg font-bold mb-2 text-black">
+              <h2 className="text-base font-bold text-black">
                 Advanced Filters
               </h2>
               <button
@@ -655,19 +685,35 @@ export const Filter = () => {
                     ? () => setShowMore(false)
                     : () => setShowMore(true)
                 }
-                className="border-blue-400 border-2 text-black px-4 mt-6 py-2 rounded-md focus:outline-none bg-white"
+                className={`flex justify-center items-center border-black border-[1px] text-black px-4 py-2 rounded-md focus:outline-none bg-white`}
               >
+                {showMore ? (
+                  <img
+                    src={HideFilter}
+                    alt=""
+                    srcset=""
+                    width={20}
+                    height={20}
+                  />
+                ) : (
+                  <img
+                    src={FilterSvg}
+                    alt=""
+                    srcset=""
+                    width={20}
+                    height={20}
+                  />
+                )}
                 {showMore ? "Hide Advanced Filters" : "Show Advanced Filters"}
               </button>
             </div>
 
             {showMore === true ? (
-              <div className="grid grid-cols-2 gap-[120px]">
-                <div
-                  className="
-          "
-                >
-                  <h2 className="text-lg font-bold mb-2">Polish</h2>
+              <div className="grid grid-cols-2 gap-[120px] my-4">
+                <div>
+                  <h2 className="text-base uppercase font-medium mb-2 text-black">
+                    Polish
+                  </h2>
                   <Slider
                     range
                     marks={
@@ -722,11 +768,14 @@ export const Filter = () => {
                     railStyle={{
                       backgroundColor: "#d5d5d5",
                     }}
+                    style={{ width: "300px" }}
                   />
                 </div>
 
                 <div className="">
-                  <h2 className="text-lg font-bold mb-2">Symmetry</h2>
+                  <h2 className="text-base uppercase font-semibold mb-2 text-black">
+                    Symmetry
+                  </h2>
                   <Slider
                     range
                     marks={
@@ -784,15 +833,16 @@ export const Filter = () => {
                     railStyle={{
                       backgroundColor: "#d5d5d5",
                     }}
+                    style={{ width: "300px" }}
                   />
                 </div>
               </div>
             ) : null}
           </div>
 
-          <div className="grid grid-cols-2 gap-[100px] pt-10">
-            <div className="mt-4 mb-4">
-              <h2 className="text-lg font-bold mb-2">Price</h2>
+          <div className="grid grid-cols-2 gap-[100px]">
+            <div className="mt-6">
+              <h2 className="text-base font-semibold text-black">Price</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
                   <label htmlFor="">
@@ -824,8 +874,10 @@ export const Filter = () => {
             </div>
 
             {/* Diamond Size */}
-            <div className="mt-4 mb-4">
-              <h2 className="text-lg font-bold mb-2">Carats (ct)</h2>
+            <div className="mt-6">
+              <h2 className="text-base font-semibold text-black">
+                Carats (ct)
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="">
@@ -857,7 +909,7 @@ export const Filter = () => {
             </div>
           </div>
 
-          <div className="border-t-2 pt-3 bg-gray-50 text-white flex  justify-center items-center py-2">
+          <div className="border-t-2 pt-3 bg-gray-50 text-white flex justify-center items-center py-2">
             <button
               onClick={onClearFilters}
               className="w-20 mb-2 h-full text-black"
@@ -883,3 +935,12 @@ export const Filter = () => {
     </section>
   );
 };
+// size <= 1440
+//                       ? { width: "200px" } // Styles for size 1440
+//                       : size <= 1024
+//                       ? { width: "170px" } // Styles for size 1024
+//                       : size <= 786
+//                       ? { width: "150px" } // Styles for size 786
+//                       : size <= 425
+//                       ? { width: "120px" } // Styles for size 425
+//                       : {}
