@@ -359,16 +359,11 @@ export const Filter = () => {
     setShowSort(!showSort);
   };
 
-  function handleResize() {
-    const pageWidth = window.innerWidth;
-    console.log(`Page Width: ${pageWidth}px`);
-  }
+  const [activeLink, setActiveLink] = useState("white");
 
-  // Initial call to set the initial width
-  handleResize();
-
-  // Listen for the resize event
-  const size = window.addEventListener("resize", handleResize);
+  const handleLink = (link) => {
+    setActiveLink(link);
+  };
 
   return (
     <section className="text-gray-400 body-font  bg-slate-100">
@@ -423,8 +418,8 @@ export const Filter = () => {
           <div className="flex flex-col flex-grow">
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 py-4 md:py-0">
               {/* Delivery Time */}
-              <div>
-                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+              <div className="my-4">
+                <h2 className="text-lg uppercase font-bold mb-2 text-black">
                   Delivery Time
                 </h2>
                 {deliveryData.map((option) => (
@@ -443,8 +438,8 @@ export const Filter = () => {
               </div>
 
               {/* Certificate Lab */}
-              <div>
-                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+              <div className="my-4">
+                <h2 className="text-lg uppercase font-bold mb-2 text-black">
                   Certificate Lab
                 </h2>
                 {certificateLabData.map((option) => (
@@ -466,10 +461,33 @@ export const Filter = () => {
             {/* Colour */}
 
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-[100px] md:gap-10">
-              <div>
-                <h2 className="text-base uppercase md:text-sm font-semibold my-2 text-black">
-                  Colour
-                </h2>
+              <div className="my-2">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg uppercase font-bold my-2 text-black">
+                    Colour
+                  </h2>
+                  <div className="bg-slate-200 rounded-md">
+                    <button
+                      className={`px-4 py-2 capitalize text-sm ${
+                        activeLink === "white" &&
+                        "bg-white text-black rounded-md font-medium border-[1px] border-black"
+                      }`}
+                      onClick={() => handleLink("white")}
+                    >
+                      white
+                    </button>
+                    <button
+                      className={`px-4 py-2 capitalize text-sm ${
+                        activeLink === "fancy" &&
+                        "bg-white text-black rounded-md font-medium border-[1px] border-black"
+                      }`}
+                      onClick={() => handleLink("fancy")}
+                    >
+                      fancy
+                    </button>
+                  </div>
+                </div>
+                {/* {activeLink === "white" && ( */}
                 <Slider
                   range
                   marks={
@@ -524,12 +542,17 @@ export const Filter = () => {
                   railStyle={{
                     backgroundColor: "#d5d5d5",
                   }}
-                  style={{ width: "300px" }}
+                  style={{ width: "400px" }}
                 />
+                {/* )} */}
+                {
+                  // activeLink === "fancy" && (
+                  // )
+                }
               </div>
               {/* Clarity */}
-              <div>
-                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+              <div className="my-2">
+                <h2 className="text-lg uppercase font-bold mb-4 text-black">
                   Clarity
                 </h2>
                 <Slider
@@ -589,13 +612,13 @@ export const Filter = () => {
                   railStyle={{
                     backgroundColor: "#d5d5d5",
                   }}
-                  style={{ width: "300px" }}
+                  style={{ width: "400px" }}
                 />
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-[40px] pt-10 ">
-              <div>
-                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+              <div className="my-4">
+                <h2 className="text-lg uppercase font-bold mb-2 text-black">
                   Cut
                 </h2>
                 <Slider
@@ -649,13 +672,13 @@ export const Filter = () => {
                     backgroundColor: "#d5d5d5",
                   }}
                   style={{
-                    width: "300px",
+                    width: "400px",
                   }}
                 />
               </div>
 
-              <div>
-                <h2 className="text-base uppercase font-semibold mb-2 text-black">
+              <div className="my-4">
+                <h2 className="text-lg uppercase font-bold mb-2 text-black">
                   Shape
                 </h2>
                 <div className="flex flex-wrap">
@@ -665,7 +688,7 @@ export const Filter = () => {
                       onClick={() => onShapeSelect(shape.name)}
                       className={`${
                         selectedShapes.includes(shape.name)
-                          ? "border-black text-black bg-white"
+                          ? "border-black text-black bg-green-200"
                           : "text-black bg-white border-gray-300"
                       } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[20px] mr-2  items-center justify-center`}
                     >
@@ -675,8 +698,8 @@ export const Filter = () => {
                 </div>
               </div>
             </div>
-            <div>
-              <h2 className="text-base font-bold text-black">
+            <div className="my-2">
+              <h2 className="text-lg font-bold mb-2 text-black">
                 Advanced Filters
               </h2>
               <button
@@ -685,7 +708,7 @@ export const Filter = () => {
                     ? () => setShowMore(false)
                     : () => setShowMore(true)
                 }
-                className={`flex justify-center items-center border-black border-[1px] text-black px-4 py-2 rounded-md focus:outline-none bg-white`}
+                className={`flex justify-center items-center border-black border-[1px] text-black px-4 py-2 rounded-md focus:outline-none bg-white gap-4`}
               >
                 {showMore ? (
                   <img
@@ -711,7 +734,7 @@ export const Filter = () => {
             {showMore === true ? (
               <div className="grid grid-cols-2 gap-[120px] my-4">
                 <div>
-                  <h2 className="text-base uppercase font-medium mb-2 text-black">
+                  <h2 className="text-lg uppercase font-bold mb-2 text-black">
                     Polish
                   </h2>
                   <Slider
@@ -768,12 +791,12 @@ export const Filter = () => {
                     railStyle={{
                       backgroundColor: "#d5d5d5",
                     }}
-                    style={{ width: "300px" }}
+                    style={{ width: "400px" }}
                   />
                 </div>
 
-                <div className="">
-                  <h2 className="text-base uppercase font-semibold mb-2 text-black">
+                <div className="my-4">
+                  <h2 className="text-lg uppercase font-bold mb-2 text-black">
                     Symmetry
                   </h2>
                   <Slider
@@ -833,7 +856,7 @@ export const Filter = () => {
                     railStyle={{
                       backgroundColor: "#d5d5d5",
                     }}
-                    style={{ width: "300px" }}
+                    style={{ width: "400px" }}
                   />
                 </div>
               </div>
@@ -842,7 +865,7 @@ export const Filter = () => {
 
           <div className="grid grid-cols-2 gap-[100px]">
             <div className="mt-6">
-              <h2 className="text-base font-semibold text-black">Price</h2>
+              <h2 className="text-lg font-bold text-black">Price</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-1 gap-4">
                 <div>
                   <label htmlFor="">
@@ -875,9 +898,7 @@ export const Filter = () => {
 
             {/* Diamond Size */}
             <div className="mt-6">
-              <h2 className="text-base font-semibold text-black">
-                Carats (ct)
-              </h2>
+              <h2 className="text-lg font-bold text-black">Carats (ct)</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="">

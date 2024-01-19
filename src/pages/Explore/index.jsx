@@ -38,20 +38,20 @@ export const Explore = () => {
             !labGrown && !loading
               ? "border-black border-2 border-spacing-6 text-black"
               : "text-black bg-white border-gray-300 border-r-0"
-          } px-4 py-2 my-1 border-[1px] focus:outline-none border-r-[1px]`}
+          } px-4 py-2 my-1 border-[1px] focus:outline-none border-r-[1px] capitalize`}
           onClick={() => changeLabGrown(false)}
         >
-          Natural
+          earth created diamonds
         </button>
         <button
           className={`${
             labGrown && !loading
-              ? "border-black border-2 border-spacing-6 text-black"
+              ? "border-black border-2 border-spacing-6 text-black "
               : "text-black bg-white border-gray-300 border-l-0"
-          } px-4 py-2 my-1 border-[1px] focus:outline-none `}
+          } px-4 py-2 my-1 border-[1px] focus:outline-none capitalize`}
           onClick={() => changeLabGrown(true)}
         >
-          Lab Grown
+          lab created diamonds
         </button>
       </div>
       {loading ? (

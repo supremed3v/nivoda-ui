@@ -261,7 +261,7 @@ export const certificateLabData = [
   },
   {
     id: 3,
-    name: "AGS",
+    name: "GCAL",
   },
 ];
 
@@ -269,7 +269,7 @@ export const deliveryData = [
   {
     id: 1,
     time: 3,
-    name: "3 days or less",
+    name: "Express Delivery",
   },
   {
     id: 2,
@@ -300,7 +300,7 @@ export const colorData = [
 export const cutData = [
   { id: 1, cut: "FR", description: "Fair" },
   { id: 2, cut: "GD", description: "Good" },
-  { id: 3, cut: "G", description: "Very Good" },
+  { id: 3, cut: "G", description: "Very Good - Excellent" },
   { id: 4, cut: "EX", description: "Excellent" },
 ];
 

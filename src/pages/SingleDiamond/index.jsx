@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ContentSkeleton } from "../../components/libs/skeleton";
 import Accordion from "../../components/libs/Accordion";
@@ -8,6 +8,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 // eslint-disable-next-line no-unused-vars
 import thumb from "../../assets/360-thumb.jpg";
+import backSvg from "../../assets/back.svg";
+import Modal from "react-modal";
+import { Tb360View } from "react-icons/tb";
+import { IoMdCloseCircle } from "react-icons/io";
 
 export const SingleDiamond = () => {
   const { addToCart } = useCartContext();
@@ -18,6 +22,9 @@ export const SingleDiamond = () => {
   };
 
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  console.log(modalIsOpen);
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
@@ -172,6 +179,18 @@ export const SingleDiamond = () => {
     // Display skeleton loader while data is being fetched
     return <ContentSkeleton />;
   }
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "550px",
+      height: "550px",
+    },
+  };
 
   return (
     data && (
@@ -206,18 +225,8 @@ export const SingleDiamond = () => {
                   className="w-full h-[500px] object-cover rounded"
                   src={data?.image}
                 />
-                <div className="absolute top-0 left-0 w-[600px] h-[500px] object-center rounded">
-                  <iframe
-                    src={data?.video}
-                    title="video"
-                    allowFullScreen
-                    className="w-full h-full object-cover rounded"
-                    style={{ border: "none" }} // Remove border if any
-                    loading="lazy"
-                  ></iframe>
-                </div>
               </Carousel>
-
+              {/*  */}
               {/* Thumbnails */}
               <div className="flex justify-center mt-4">
                 <img
@@ -228,21 +237,57 @@ export const SingleDiamond = () => {
                   } w-16 h-16 cursor-pointer`}
                   onClick={() => goToSlide(0)}
                 />
-                <img
-                  src={thumb}
-                  alt="Thumbnail Video"
-                  className={`thumbnail ${
-                    currentSlide === 1 ? "border-2 border-black" : ""
-                  } w-16 h-16 cursor-pointer ml-2`}
-                  onClick={() => goToSlide(1)}
-                />
+
+                <button onClick={() => setIsOpen(true)}>
+                  <img
+                    src={thumb}
+                    alt="Thumbnail Video"
+                    className={`thumbnail ${
+                      currentSlide === 1 ? "border-2 border-black" : ""
+                    } w-16 h-16 cursor-pointer ml-2`}
+                    // onClick={() => goToSlide(1)}
+                  />
+                </button>
+
+                {/* <button>
+                  <span className="">
+                    <Tb360View size={20} color="white" />
+                  </span>
+                </button> */}
+                <Modal
+                  isOpen={modalIsOpen}
+                  onRequestClose={() => setIsOpen(false)}
+                  style={customStyles}
+                >
+                  {/* <button
+                    onClick={() => setIsOpen(false)}
+                    className="absolute top-0 right-0 bg-gray-900 text-white rounded-full p-2 m-2 cursor-pointer focus:outline-none"
+                  >
+                    <IoMdCloseCircle size={20} color="white" />
+                  </button> */}
+                  <iframe
+                    src={data?.video}
+                    width="100%"
+                    height="100%"
+                    allowfullscreen
+                  ></iframe>
+                </Modal>
               </div>
             </div>
 
             <div className="lg:w-1/2 w-full lg:pl-10  mt-6 lg:mt-0">
-              <h2 className="text-sm title-font text-gray-500 tracking-widest">
+              {/* <h2 className="text-sm title-font text-gray-500 tracking-widest">
                 {data?.supplier?.name}
-              </h2>
+              </h2> */}
+              <Link
+                className="text-sm flex gap-2 my-4 cursor-pointer"
+                to={"/explore"}
+              >
+                <span>
+                  <img src={backSvg} alt="back-svg" width={20} height={20} />
+                </span>
+                Go Back
+              </Link>
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
                 {data?.certificate.shape} {data?.certificate.carats}ct{" "}
                 {data?.certificate.cut} {data?.certificate.color}{" "}
@@ -251,7 +296,7 @@ export const SingleDiamond = () => {
               <div className="flex mb-4">
                 <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
                   Delivery Time: {data?.delivery_time.min_business_days} -{" "}
-                  {data?.delivery_time.max_business_days} business days
+                  {data?.delivery_time.max_business_days + 2} business days
                 </h3>
               </div>
               <div className="flex py-2">
@@ -269,11 +314,11 @@ export const SingleDiamond = () => {
                   {data?.certificate?.pdfUrl && (
                     <a
                       href={data.certificate.pdfUrl}
-                      className="text-white bg-gray-700 border-0 py-2 mb-2 px-6 focus:outline-none hover:bg-gray-600 rounded"
+                      className="text-white bg-gray-700 border-0 py-2 mb-2 px-6 capitalize focus:outline-none hover:bg-gray-600 rounded"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      PDF Certificate Download
+                      view diamond certificate
                     </a>
                   )}
                   <button
@@ -354,13 +399,13 @@ export const SingleDiamond = () => {
                 />
 
                 {/* Additional Details */}
-                <Accordion
+                {/* <Accordion
                   title="Additional Details"
                   details={[
                     { label: "Mine to market", value: "N/A" },
                     { label: "Mine of origin", value: "N/A" },
                   ]}
-                />
+                /> */}
               </div>
             </div>
           </motion.div>
