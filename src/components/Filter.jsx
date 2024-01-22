@@ -57,8 +57,8 @@ export const Filter = () => {
     dollarTo: 10000000,
     diamondSizeFrom: 0.92,
     diamondSizeTo: 30.0,
-    selectedSymmetries: ["VG", "GD"],
-    selectedPolishes: ["VG", "G"],
+    selectedSymmetries: ["EX", "VG", "GD"],
+    selectedPolishes: ["EX", "VG", "G"],
     selectedFluorescence: ["MED", "STG", "VST"],
   };
 
@@ -391,6 +391,27 @@ export const Filter = () => {
     setActiveLink(link);
   };
 
+  const [showAllShapes, setShowAllShapes] = useState(false);
+
+  const renderShapes = () => {
+    const shapesToRender = showAllShapes ? shapeData : shapeData.slice(0, 16);
+
+    return shapesToRender.map((shape) => (
+      <button
+        key={shape.id}
+        onClick={() => onShapeSelect(shape.name)}
+        className={`${
+          selectedShapes.includes(shape.name)
+            ? "border-black text-black bg-green-200"
+            : "text-black bg-white border-gray-300"
+        } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[30px] mr-1 mt-1 items-center justify-center relative`}
+        title={shape.name} // Add title attribute for tooltip
+      >
+        {shape.img}
+      </button>
+    ));
+  };
+
   return (
     <section className="text-gray-400 body-font  bg-slate-100">
       <div className="container px-5 py-2 mx-auto">
@@ -707,22 +728,18 @@ export const Filter = () => {
                 <h2 className="text-lg uppercase font-bold mb-2 text-black">
                   Shape
                 </h2>
-                <div className="flex flex-wrap">
-                  {shapeData.map((shape) => (
-                    <button
-                      key={shape.id}
-                      onClick={() => onShapeSelect(shape.name)}
-                      className={`${
-                        selectedShapes.includes(shape.name)
-                          ? "border-black text-black bg-green-200"
-                          : "text-black bg-white border-gray-300"
-                      } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[20px] mr-2 items-center justify-center relative`}
-                      title={shape.name + " Diamond"} // Add title attribute for tooltip
-                    >
-                      {shape.img}
-                    </button>
-                  ))}
-                </div>
+                <div className="flex flex-wrap">{renderShapes()}</div>
+
+                <button
+                  onClick={
+                    showAllShapes === true
+                      ? () => setShowAllShapes(false)
+                      : () => setShowAllShapes(true)
+                  }
+                  className="bg-black text-white px-4 py-2 mt-4 rounded-md"
+                >
+                  {showAllShapes === true ? "Show Less" : "Show All Shapes"}
+                </button>
               </div>
             </div>
             <div className="my-2">
@@ -741,7 +758,7 @@ export const Filter = () => {
                   <img
                     src={HideFilter}
                     alt=""
-                    srcset=""
+                    srcSet=""
                     width={20}
                     height={20}
                   />
@@ -749,7 +766,7 @@ export const Filter = () => {
                   <img
                     src={FilterSvg}
                     alt=""
-                    srcset=""
+                    srcSet=""
                     width={20}
                     height={20}
                   />

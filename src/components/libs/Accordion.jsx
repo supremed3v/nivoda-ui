@@ -23,7 +23,13 @@ const Accordion = ({ title, details, defaultOpen = false }) => {
           {details.map((item, index) => (
             <div key={index} className="mb-2">
               {item.label && <span className="font-bold">{item.label}:</span>}{" "}
-              {item.value}
+              <span
+                className={`${
+                  item.label ? "text-gray-500 font-bold" : "font-bold"
+                } text-sm`}
+              >
+                {item.value}
+              </span>
             </div>
           ))}
         </div>

@@ -123,7 +123,7 @@ const DiamondCard = ({ diamond }) => {
               alignItems: "center",
             }}
           >
-            View Diamond
+            View Diamond Details
           </Link>
         </div>
       </div>

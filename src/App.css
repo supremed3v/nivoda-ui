@@ -92,11 +92,6 @@ body {
   margin-top: 10px;
 }
 
-.rc-slider-mark-text-active {
-  background-color: rgb(187 247 208);
-  padding: 5px;
-}
-
 .rc-slider-dot-active {
   border-color: gray !important;
 }
