@@ -354,6 +354,10 @@ export const Filter = () => {
     }
   };
 
+  useEffect(() => {
+    handleFiltersApplied();
+  }, []);
+
   const [showSort, setShowSort] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
