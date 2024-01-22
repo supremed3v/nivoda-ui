@@ -27,17 +27,39 @@ export const Filter = () => {
     setLoading,
   } = useNivodaDiamonds();
   const defaultValues = {
-    selectedShapes: ["ROUND"],
+    selectedShapes: [
+      "ROUND",
+      "OVAL",
+      "CUSHION",
+      "PEAR",
+      "PRINCESS",
+      "RADIANT",
+      "EMERALD",
+      "ASSCHER",
+      "MARQUISE",
+      "HEART",
+      "TRILLION",
+      "BAGUETTE",
+      "SQ. EMERALD",
+      "SQ. RADIANT",
+      "OLD MINER",
+      "EUROPEAN CUT",
+      "STAR",
+      "ROSE",
+      "FLANDERS",
+      "TRILLIANT",
+      "CUSHION BRILLIANT",
+    ],
     selectedColors: ["H", "G", "F", "E", "D"],
     selectedClarity: ["SI1", "VS2", "VS1", "VVS2", "VVS1", "IF"],
-    selectedCuts: ["GD", "G", "EX"],
+    selectedCuts: ["G", "EX"],
     dollarFrom: 500,
     dollarTo: 10000000,
     diamondSizeFrom: 0.92,
     diamondSizeTo: 30.0,
-    selectedSymmetries: ["EX", "VG", "GD"],
-    selectedPolishes: ["EX", "VG", "G"],
-    selectedFluorescence: ["NON", "FNT", "MED", "STG", "VST"],
+    selectedSymmetries: ["VG", "GD"],
+    selectedPolishes: ["VG", "G"],
+    selectedFluorescence: ["MED", "STG", "VST"],
   };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -344,7 +366,7 @@ export const Filter = () => {
     setSelectedCuts(defaultValues.selectedCuts);
     setSelectedPolishes([]);
     setSelectedSymmetries([]);
-    setSelectedFlourescence([]);
+    setSelectedFlourescence(defaultValues.selectedFluorescence);
     setAnyFilterApplied(false);
     setDollarFrom(defaultValues.dollarFrom);
     setDollarTo(defaultValues.dollarTo);
@@ -414,13 +436,13 @@ export const Filter = () => {
             />
           )}
         </div>
-        <div className="w-[900px] mx-auto z-50 mt-4">
+        <div className="w-[1000px] mx-auto z-50 mt-4">
           <div className="flex flex-col flex-grow">
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 py-4 md:py-0">
               {/* Delivery Time */}
               <div className="my-4">
                 <h2 className="text-lg uppercase font-bold mb-2 text-black">
-                  Delivery Time
+                  Estimated Delivery Time
                 </h2>
                 {deliveryData.map((option) => (
                   <button
@@ -690,7 +712,8 @@ export const Filter = () => {
                         selectedShapes.includes(shape.name)
                           ? "border-black text-black bg-green-200"
                           : "text-black bg-white border-gray-300"
-                      } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[20px] mr-2  items-center justify-center`}
+                      } px-6 py-2 rounded-sm border focus:outline-none flex flex-col w-[20px] mr-2 items-center justify-center relative`}
+                      title={shape.name + " Diamond"} // Add title attribute for tooltip
                     >
                       {shape.img}
                     </button>
@@ -793,17 +816,82 @@ export const Filter = () => {
                     }}
                     style={{ width: "400px" }}
                   />
+                  <div className="my-14">
+                    <h2 className="text-lg uppercase font-bold mb-2 text-black">
+                      Symmetry
+                    </h2>
+                    <Slider
+                      range
+                      marks={
+                        symmetryData.length > 0
+                          ? symmetryData.reduce((acc, item, index) => {
+                              acc[index + 1] = {
+                                label: item.description,
+                              };
+                              return acc;
+                            }, {})
+                          : {}
+                      }
+                      min={1}
+                      max={symmetryData.length}
+                      step={1}
+                      defaultValue={
+                        selectedSymmetries.length > 0
+                          ? [
+                              symmetryData.findIndex(
+                                (item) =>
+                                  item.symmetry === selectedSymmetries[0]
+                              ) + 1,
+                              symmetryData.findIndex(
+                                (item) =>
+                                  item.symmetry ===
+                                  selectedSymmetries[
+                                    selectedSymmetries.length - 1
+                                  ]
+                              ) + 1,
+                            ]
+                          : [1, symmetryData.length]
+                      }
+                      onChange={(values) => {
+                        const selectedSymmetryIndices = Array.from(
+                          { length: values[1] - values[0] + 1 },
+                          (_, index) => values[0] + index
+                        );
+                        setSelectedSymmetries(
+                          selectedSymmetryIndices.map(
+                            (index) =>
+                              symmetryData.find((item) => item.id === index)
+                                ?.symmetry
+                          )
+                        );
+                      }}
+                      trackStyle={{
+                        backgroundColor: "#000",
+                      }}
+                      handleStyle={{
+                        backgroundColor: "#fff",
+                        borderColor: "#000",
+                        width: "20px",
+                        height: "20px",
+                        marginTop: "-7px",
+                      }}
+                      railStyle={{
+                        backgroundColor: "#d5d5d5",
+                      }}
+                      style={{ width: "400px" }}
+                    />
+                  </div>
                 </div>
 
                 <div className="my-4">
                   <h2 className="text-lg uppercase font-bold mb-2 text-black">
-                    Symmetry
+                    Fluorescence
                   </h2>
                   <Slider
                     range
                     marks={
-                      symmetryData.length > 0
-                        ? symmetryData.reduce((acc, item, index) => {
+                      fluorescenceData.length > 0
+                        ? fluorescenceData.reduce((acc, item, index) => {
                             acc[index + 1] = {
                               label: item.description,
                             };
@@ -812,34 +900,35 @@ export const Filter = () => {
                         : {}
                     }
                     min={1}
-                    max={symmetryData.length}
+                    max={fluorescenceData.length}
                     step={1}
                     defaultValue={
-                      selectedSymmetries.length > 0
+                      selectedFlourescence.length > 0
                         ? [
-                            symmetryData.findIndex(
-                              (item) => item.symmetry === selectedSymmetries[0]
-                            ) + 1,
-                            symmetryData.findIndex(
+                            fluorescenceData.findIndex(
                               (item) =>
-                                item.symmetry ===
-                                selectedSymmetries[
-                                  selectedSymmetries.length - 1
+                                item.fluorescence === selectedFlourescence[0]
+                            ) + 1,
+                            fluorescenceData.findIndex(
+                              (item) =>
+                                item.fluorescence ===
+                                selectedFlourescence[
+                                  selectedFlourescence.length - 1
                                 ]
                             ) + 1,
                           ]
-                        : [1, symmetryData.length]
+                        : [1, fluorescenceData.length]
                     }
                     onChange={(values) => {
-                      const selectedSymmetryIndices = Array.from(
+                      const selectedflourescenceIndices = Array.from(
                         { length: values[1] - values[0] + 1 },
                         (_, index) => values[0] + index
                       );
-                      setSelectedSymmetries(
-                        selectedSymmetryIndices.map(
+                      setSelectedFlourescence(
+                        selectedflourescenceIndices.map(
                           (index) =>
-                            symmetryData.find((item) => item.id === index)
-                              ?.symmetry
+                            fluorescenceData.find((item) => item.id === index)
+                              .id
                         )
                       );
                     }}

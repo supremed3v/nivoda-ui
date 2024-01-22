@@ -200,6 +200,17 @@ export const SingleDiamond = () => {
         initial="hidden"
         animate="visible"
       >
+        <div className="container px-96 items-center justify-center">
+          <Link
+            className="text-lg font-bold flex items-center text-current gap-2 cursor-pointer"
+            to={"/explore"}
+          >
+            <span>
+              <img src={backSvg} alt="back-svg" width={40} height={40} />
+            </span>
+            Back to search
+          </Link>
+        </div>
         <div className="container px-5 py-24 mx-auto">
           <motion.div
             className="lg:w-4/5 mx-auto flex flex-wrap"
@@ -279,15 +290,7 @@ export const SingleDiamond = () => {
               {/* <h2 className="text-sm title-font text-gray-500 tracking-widest">
                 {data?.supplier?.name}
               </h2> */}
-              <Link
-                className="text-sm flex gap-2 my-4 cursor-pointer"
-                to={"/explore"}
-              >
-                <span>
-                  <img src={backSvg} alt="back-svg" width={20} height={20} />
-                </span>
-                Go Back
-              </Link>
+
               <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">
                 {data?.certificate.shape} {data?.certificate.carats}ct{" "}
                 {data?.certificate.cut} {data?.certificate.color}{" "}
