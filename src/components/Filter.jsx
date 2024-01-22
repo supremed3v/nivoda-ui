@@ -57,8 +57,8 @@ export const Filter = () => {
     dollarTo: 10000000,
     diamondSizeFrom: 0.92,
     diamondSizeTo: 30.0,
-    selectedSymmetries: ["EX", "VG", "GD"],
-    selectedPolishes: ["EX", "VG", "G"],
+    selectedSymmetries: ["EX", "VG"],
+    selectedPolishes: ["EX", "VG"],
     selectedFluorescence: ["MED", "STG", "VST"],
   };
 
