@@ -429,7 +429,7 @@ export const Filter = () => {
           </button>
 
           {showSort === true && (
-            <div className="origin-top-right absolute z-20 right-0 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-100">
+            <div className="origin-top-left absolute z-20 right-0 left-0 mt-10 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-100">
               <div
                 className="py-1"
                 role="menu"
