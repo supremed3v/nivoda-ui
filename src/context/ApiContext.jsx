@@ -123,6 +123,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
                                           floCol
                                           depthPercentage
                                           table
+                                          f_color
                                          }
                                          v360 {
                                           url
@@ -272,6 +273,7 @@ export const NivodaDiamondsProvider = ({ children }) => {
                                           floCol
                                           depthPercentage
                                           table
+                                          f_color
                                          }
                                     price
                                     }

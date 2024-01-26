@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   certificateLabData,
   clarityData,
@@ -15,6 +15,26 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import FilterSvg from "../assets/filter.svg";
 import HideFilter from "../assets/hidefilter.svg";
+import {
+  Box,
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from "@mui/material";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 export const Filter = () => {
   const {
     setFilteredDiamonds,
@@ -27,29 +47,7 @@ export const Filter = () => {
     setLoading,
   } = useNivodaDiamonds();
   const defaultValues = {
-    selectedShapes: [
-      "ROUND",
-      "OVAL",
-      "CUSHION",
-      "PEAR",
-      "PRINCESS",
-      "RADIANT",
-      "EMERALD",
-      "ASSCHER",
-      "MARQUISE",
-      "HEART",
-      "TRILLION",
-      "BAGUETTE",
-      "SQ. EMERALD",
-      "SQ. RADIANT",
-      "OLD MINER",
-      "EUROPEAN CUT",
-      "STAR",
-      "ROSE",
-      "FLANDERS",
-      "TRILLIANT",
-      "CUSHION BRILLIANT",
-    ],
+    selectedShapes: ["ROUND"],
     selectedColors: ["H", "G", "F", "E", "D"],
     selectedClarity: ["SI1", "VS2", "VS1", "VVS2", "VVS1", "IF"],
     selectedCuts: ["G", "EX"],
@@ -59,7 +57,7 @@ export const Filter = () => {
     diamondSizeTo: 30.0,
     selectedSymmetries: ["EX", "VG"],
     selectedPolishes: ["EX", "VG"],
-    selectedFluorescence: ["MED", "STG", "VST"],
+    selectedFluorescence: ["NON", "FNT", "MED", "STG", "VST"],
   };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -126,7 +124,11 @@ export const Filter = () => {
     );
   };
 
-  const handleFiltersApplied = async () => {
+  const [activeLink, setActiveLink] = useState("white");
+
+  const [selectedFancy, setSelectedFancy] = useState([]);
+
+  const handleFiltersApplied = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(
@@ -176,7 +178,9 @@ export const Filter = () => {
                             {
                                 diamonds_by_query(
                                     query: {
-                                        labgrown: ${labGrown},
+                                        labgrown: ${
+                                          labGrown === true ? true : false
+                                        },
                                         shapes: ${
                                           selectedShapes.length > 0
                                             ? `[${selectedShapes.map(
@@ -195,9 +199,18 @@ export const Filter = () => {
                                         has_v360: true,
                                         has_image: true,
                                         color: ${
+                                          activeLink === "white" &&
                                           selectedColors.length > 0
                                             ? `[${selectedColors
                                                 .map((cl) => `${cl}`)
+                                                .join(", ")}]`
+                                            : "[FANCY]"
+                                        },
+                                        fancyColor: ${
+                                          activeLink === "fancy" &&
+                                          selectedFancy.length > 0
+                                            ? `[${selectedFancy
+                                                .map((cl) => `"${cl}"`)
                                                 .join(", ")}]`
                                             : "[]"
                                         },
@@ -330,33 +343,94 @@ export const Filter = () => {
         );
         setFilteredDiamonds(filterImage);
         setLoading(false);
-        if (
-          selectedClarity ||
-          selectedColors ||
-          selectedCuts ||
-          selectedPolishes ||
-          selectedSymmetries ||
-          selectedFlourescence ||
-          selectedDeliveryTimes ||
-          selectedCertificates ||
-          selectedShapes ||
-          dollarFrom ||
-          dollarTo ||
-          diamondSizeFrom ||
-          diamondSizeTo
-        ) {
-          setAnyFilterApplied(true);
-        }
       }
     } catch (error) {
       console.error("Error fetching Nivoda data:", error);
       setLoading(false);
     }
-  };
+  }, [
+    labGrown,
+    selectedShapes,
+    selectedCuts,
+    diamondSizeFrom,
+    diamondSizeTo,
+    selectedColors,
+    selectedClarity,
+    selectedFlourescence,
+    selectedDeliveryTimes,
+    selectedCertificates,
+    selectedPolishes,
+    selectedSymmetries,
+    dollarFrom,
+    dollarTo,
+    sortOrder,
+    setFilteredDiamonds,
+    setLoading,
+    activeLink,
+    selectedFancy,
+  ]);
 
   useEffect(() => {
+    const storedState = JSON.parse(localStorage.getItem("nivodaState"));
+
+    if (storedState) {
+      setLabGrown(storedState.labGrown);
+      setSelectedShapes(storedState.selectedShapes);
+      setSelectedColors(storedState.selectedColors);
+      setSelectedClarity(storedState.selectedClarity);
+      setSelectedCuts(storedState.selectedCuts);
+      setSelectedPolishes(storedState.selectedPolishes);
+      setSelectedSymmetries(storedState.selectedSymmetries);
+      setSelectedFlourescence(storedState.selectedFlourescence);
+      setDollarFrom(storedState.dollarFrom);
+      setDollarTo(storedState.dollarTo);
+      setDiamondSizeFrom(storedState.diamondSizeFrom);
+      setDiamondSizeTo(storedState.diamondSizeTo);
+      setSelectedDeliveryTimes(storedState.selectedDeliveryTimes);
+    }
+
     handleFiltersApplied();
   }, []);
+
+  console.log("Active Link", activeLink);
+
+  useEffect(() => {
+    const stateToSave = {
+      labGrown,
+      selectedShapes,
+      selectedColors,
+      selectedClarity,
+      selectedCuts,
+      selectedPolishes,
+      selectedSymmetries,
+      selectedFlourescence,
+      dollarFrom,
+      dollarTo,
+      diamondSizeFrom,
+      diamondSizeTo,
+      selectedDeliveryTimes,
+      selectedCertificates,
+      selectedFancy,
+    };
+
+    localStorage.setItem("nivodaState", JSON.stringify(stateToSave));
+  }, [
+    selectedShapes,
+    selectedCuts,
+    diamondSizeFrom,
+    diamondSizeTo,
+    selectedColors,
+    selectedClarity,
+    selectedFlourescence,
+    selectedPolishes,
+    selectedSymmetries,
+    dollarFrom,
+    dollarTo,
+    labGrown,
+    selectedDeliveryTimes,
+    selectedFancy,
+    selectedCertificates,
+  ]);
 
   const [showSort, setShowSort] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -385,13 +459,27 @@ export const Filter = () => {
     setShowSort(!showSort);
   };
 
-  const [activeLink, setActiveLink] = useState("white");
-
   const handleLink = (link) => {
     setActiveLink(link);
   };
 
   const [showAllShapes, setShowAllShapes] = useState(false);
+  const colorOptions = [
+    "Red",
+    "Green",
+    "Blue",
+    "Yellow",
+    "Purple",
+    "Orange",
+    "Pink",
+    "Brown",
+    "Chameleon",
+    "Gray",
+    "Black",
+    "White",
+    "Violet",
+    "Champagne",
+  ];
 
   const renderShapes = () => {
     const shapesToRender = showAllShapes ? shapeData : shapeData.slice(0, 16);
@@ -534,68 +622,105 @@ export const Filter = () => {
                     </button>
                   </div>
                 </div>
-                {/* {activeLink === "white" && ( */}
-                <Slider
-                  range
-                  marks={
-                    colorData.length > 0
-                      ? colorData.reduce((acc, item, index) => {
-                          acc[index + 1] = {
-                            label: item.color,
-                          };
-                          return acc;
-                        }, {})
-                      : {}
-                  }
-                  min={1}
-                  max={colorData.length}
-                  step={1}
-                  defaultValue={
-                    selectedColors.length > 0
-                      ? [
-                          colorData.findIndex(
-                            (item) => item.color === selectedColors[0]
-                          ) + 1,
-                          colorData.findIndex(
-                            (item) =>
-                              item.color ===
-                              selectedColors[selectedColors.length - 1]
-                          ) + 1,
-                        ]
-                      : [1, colorData.length]
-                  }
-                  onChange={(values) => {
-                    const selectedColorIds = Array.from(
-                      { length: values[1] - values[0] + 1 },
-                      (_, index) => values[0] + index
-                    );
-                    setSelectedColors(
-                      selectedColorIds.map(
-                        (id) =>
-                          colorData.find((color) => color.id === id)?.color
-                      )
-                    );
-                  }}
-                  trackStyle={{
-                    backgroundColor: "#000000",
-                  }}
-                  handleStyle={{
-                    backgroundColor: "#fff",
-                    borderColor: "#000000",
-                    width: "20px",
-                    height: "20px",
-                    marginTop: "-7px",
-                  }}
-                  railStyle={{
-                    backgroundColor: "#d5d5d5",
-                  }}
-                  style={{ width: "400px" }}
-                />
-                {/* )} */}
-                {
-                  // activeLink === "fancy" && (
-                  // )
-                }
+                {activeLink === "white" && (
+                  <Slider
+                    range
+                    marks={
+                      colorData.length > 0
+                        ? colorData.reduce((acc, item, index) => {
+                            acc[index + 1] = {
+                              label: item.color,
+                            };
+                            return acc;
+                          }, {})
+                        : {}
+                    }
+                    min={1}
+                    max={colorData.length}
+                    step={1}
+                    defaultValue={
+                      selectedColors.length > 0
+                        ? [
+                            colorData.findIndex(
+                              (item) => item.color === selectedColors[0]
+                            ) + 1,
+                            colorData.findIndex(
+                              (item) =>
+                                item.color ===
+                                selectedColors[selectedColors.length - 1]
+                            ) + 1,
+                          ]
+                        : [1, colorData.length]
+                    }
+                    onChange={(values) => {
+                      const selectedColorIds = Array.from(
+                        { length: values[1] - values[0] + 1 },
+                        (_, index) => values[0] + index
+                      );
+                      setSelectedColors(
+                        selectedColorIds.map(
+                          (id) =>
+                            colorData.find((color) => color.id === id)?.color
+                        )
+                      );
+                    }}
+                    trackStyle={{
+                      backgroundColor: "#000000",
+                    }}
+                    handleStyle={{
+                      backgroundColor: "#fff",
+                      borderColor: "#000000",
+                      width: "20px",
+                      height: "20px",
+                      marginTop: "-7px",
+                    }}
+                    railStyle={{
+                      backgroundColor: "#d5d5d5",
+                    }}
+                    style={{ width: "400px" }}
+                  />
+                )}
+                {activeLink === "fancy" && (
+                  <FormControl sx={{ m: 1, width: 300 }}>
+                    <InputLabel id="demo-simple-select-label">
+                      Fancy Color
+                    </InputLabel>
+                    <Select
+                      labelId="demo-multiple-chip-label"
+                      id="demo-multiple-chip"
+                      multiple
+                      value={selectedFancy}
+                      onChange={(event) => setSelectedFancy(event.target.value)}
+                      input={
+                        <OutlinedInput id="select-multiple-chip" label="Chip" />
+                      }
+                      renderValue={(selected) => (
+                        <Box
+                          sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+                        >
+                          {selected.map((value) => (
+                            <Chip key={value} label={value} />
+                          ))}
+                        </Box>
+                      )}
+                      MenuProps={MenuProps}
+                    >
+                      {colorOptions.map((name) => (
+                        <MenuItem
+                          key={name}
+                          value={name}
+                          style={{
+                            backgroundColor: selectedFancy.includes(name)
+                              ? "#e7e7e7e7"
+                              : "#fff",
+                          }}
+                        >
+                          {name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
               </div>
               {/* Clarity */}
               <div className="my-2">
@@ -949,7 +1074,7 @@ export const Filter = () => {
                         selectedflourescenceIndices.map(
                           (index) =>
                             fluorescenceData.find((item) => item.id === index)
-                              .id
+                              ?.fluorescence
                         )
                       );
                     }}

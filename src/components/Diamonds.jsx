@@ -85,7 +85,7 @@ const DiamondCard = ({ diamond }) => {
         <h2 className="text-gray-700 title-font text-lg font-medium">
           {diamond.certificate.shape} {diamond.certificate.carats}ct{" "}
           {diamond.certificate.cut} {diamond.certificate.color}{" "}
-          {diamond.certificate.clarity}
+          {diamond.certificate.f_color} {diamond.certificate.clarity}{" "}
         </h2>
         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">
           Delivery Time: {diamond.delivery_time.min_business_days} -{" "}

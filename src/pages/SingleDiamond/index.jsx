@@ -144,6 +144,7 @@ export const SingleDiamond = () => {
                           crownAngle
                           pavDepth
                           pavAngle
+                          f_color
                          }
                          mine_of_origin
                          v360 {
@@ -340,7 +341,8 @@ export const SingleDiamond = () => {
                   details={[
                     { label: "Shape", value: data?.certificate.shape },
                     { label: "Size", value: data?.certificate.carats },
-                    { label: "Colour", value: data?.certificate.color },
+                    { label: "Certificate", value: data?.certificate.lab },
+                    { label: "Colour", value: data?.certificate.f_color },
                     { label: "Clarity", value: data?.certificate.clarity },
                     { label: "Cut", value: data?.certificate.cut },
                     { label: "Polish", value: data?.certificate.polish },
